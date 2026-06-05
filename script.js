@@ -253,6 +253,8 @@ const roomCount = document.querySelector("#room-count");
 const reactionText = document.querySelector("#reaction-text");
 const roomPanel = document.querySelector("#room-panel");
 const tunnelStage = document.querySelector(".tunnel-stage");
+const welcomeModal = document.querySelector("#welcome-modal");
+const startCardButton = document.querySelector("#start-card");
 const foodButtons = document.querySelectorAll(".food-button[data-food]");
 const roomButtons = document.querySelectorAll(".room");
 
@@ -317,6 +319,7 @@ function init() {
   updateUi();
   showRoom("sleep");
   updateScrollMode();
+  showWelcomeModal();
   requestAnimationFrame(loop);
 }
 
@@ -369,6 +372,31 @@ function wireEvents() {
   });
 
   document.querySelector("#reset-progress").addEventListener("click", resetGame);
+  startCardButton?.addEventListener("click", closeWelcomeModal);
+  welcomeModal?.addEventListener("click", (event) => {
+    if (event.target === welcomeModal) {
+      closeWelcomeModal();
+    }
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && welcomeModal && !welcomeModal.classList.contains("is-hidden")) {
+      closeWelcomeModal();
+    }
+  });
+}
+
+function showWelcomeModal() {
+  if (!welcomeModal) return;
+  document.body.classList.add("modal-open");
+  welcomeModal.classList.remove("is-hidden");
+  startCardButton?.focus();
+}
+
+function closeWelcomeModal() {
+  if (!welcomeModal) return;
+  welcomeModal.classList.add("is-hidden");
+  document.body.classList.remove("modal-open");
+  foodButtons[0]?.focus();
 }
 
 function selectFood(type) {
@@ -791,9 +819,43 @@ function drawBirthdayParty(now) {
 
   const startedAt = sim.partyStartedAt || now - 4800;
   const age = Math.max(0, now - startedAt);
+  drawPartyStreamers(now);
   drawPartyConfetti(now, age);
   drawPartyBalloons(now);
   drawBirthdayBanner(age);
+}
+
+function drawPartyStreamers(now) {
+  const colors = ["#d94f43", "#f4c542", "#1f7a83", "#3167b1"];
+  const top = isCompactCanvas() ? 118 : 130;
+  ctx.save();
+  ctx.lineWidth = isCompactCanvas() ? 3 : 4;
+  ctx.lineCap = "round";
+  for (let strand = 0; strand < 3; strand += 1) {
+    const y = top + strand * (isCompactCanvas() ? 24 : 30);
+    ctx.beginPath();
+    for (let x = 0; x <= width; x += 26) {
+      const waveY = y + Math.sin(x / 42 + now / 520 + strand) * 9;
+      if (x === 0) {
+        ctx.moveTo(x, waveY);
+      } else {
+        ctx.lineTo(x, waveY);
+      }
+    }
+    ctx.strokeStyle = colors[strand % colors.length];
+    ctx.globalAlpha = 0.58;
+    ctx.stroke();
+
+    for (let x = 28 + strand * 11; x < width; x += isCompactCanvas() ? 74 : 92) {
+      ctx.globalAlpha = 0.9;
+      ctx.fillStyle = colors[(strand + Math.floor(x / 90)) % colors.length];
+      ctx.beginPath();
+      ctx.arc(x, y + Math.sin(x / 42 + now / 520 + strand) * 9, isCompactCanvas() ? 5 : 7, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+  ctx.restore();
+  ctx.globalAlpha = 1;
 }
 
 function drawPartyConfetti(now, age) {
@@ -868,49 +930,102 @@ function drawPartyBalloons(now) {
 
 function drawBirthdayBanner(age) {
   const compact = isCompactCanvas();
-  const bannerWidth = Math.min(width - 28, compact ? 348 : 620);
-  const bannerHeight = compact ? 58 : 74;
+  const bannerWidth = Math.min(width - 24, compact ? 352 : 720);
+  const bannerHeight = compact ? 86 : 112;
   const x = width / 2 - bannerWidth / 2;
-  const targetY = compact ? 18 : 22;
+  const targetY = compact ? 16 : 18;
   const intro = clamp(age / 900, 0, 1);
   const eased = 1 - Math.pow(1 - intro, 3);
   const y = targetY - (1 - eased) * 110 + Math.sin(age / 260) * (intro < 1 ? 2 : 1.2);
+  const ropeY = y + (compact ? 13 : 17);
 
   ctx.save();
+  ctx.strokeStyle = "rgba(78, 49, 30, 0.72)";
+  ctx.lineWidth = compact ? 4 : 5;
+  ctx.lineCap = "round";
+  ctx.beginPath();
+  ctx.moveTo(Math.max(0, x - 32), ropeY);
+  ctx.bezierCurveTo(x + bannerWidth * 0.25, ropeY - 24, x + bannerWidth * 0.75, ropeY + 24, Math.min(width, x + bannerWidth + 32), ropeY);
+  ctx.stroke();
+
   ctx.shadowColor = "rgba(44, 28, 16, 0.28)";
   ctx.shadowBlur = 18;
   ctx.shadowOffsetY = 10;
-  ctx.fillStyle = "rgba(255, 249, 234, 0.97)";
-  roundRect(x, y, bannerWidth, bannerHeight, 8);
+  const bannerGradient = ctx.createLinearGradient(x, y, x, y + bannerHeight);
+  bannerGradient.addColorStop(0, "#fff7dc");
+  bannerGradient.addColorStop(0.5, "#fff0bb");
+  bannerGradient.addColorStop(1, "#f0c45a");
+  ctx.fillStyle = bannerGradient;
+  ctx.beginPath();
+  ctx.moveTo(x + 16, y + 10);
+  ctx.lineTo(x + bannerWidth - 16, y + 10);
+  ctx.quadraticCurveTo(x + bannerWidth - 4, y + bannerHeight * 0.5, x + bannerWidth - 16, y + bannerHeight - 6);
+  ctx.lineTo(x + bannerWidth * 0.56, y + bannerHeight - 1);
+  ctx.quadraticCurveTo(x + bannerWidth * 0.5, y + bannerHeight - 12, x + bannerWidth * 0.44, y + bannerHeight - 1);
+  ctx.lineTo(x + 16, y + bannerHeight - 6);
+  ctx.quadraticCurveTo(x + 4, y + bannerHeight * 0.5, x + 16, y + 10);
+  ctx.closePath();
   ctx.fill();
   ctx.shadowColor = "transparent";
 
-  ctx.strokeStyle = "#d94f43";
-  ctx.lineWidth = compact ? 4 : 5;
-  roundRect(x + 5, y + 5, bannerWidth - 10, bannerHeight - 10, 6);
-  ctx.stroke();
-
-  const colors = ["#d94f43", "#f4c542", "#1f7a83", "#3167b1"];
-  const flagCount = compact ? 9 : 15;
-  for (let i = 0; i < flagCount; i += 1) {
-    const flagX = x + 16 + i * ((bannerWidth - 32) / Math.max(1, flagCount - 1));
-    ctx.fillStyle = colors[i % colors.length];
+  ctx.fillStyle = "rgba(255,255,255,0.34)";
+  for (let i = 0; i < 7; i += 1) {
+    const stripeX = x + 22 + i * (bannerWidth / 7);
     ctx.beginPath();
-    ctx.moveTo(flagX - 7, y + bannerHeight - 3);
-    ctx.lineTo(flagX + 7, y + bannerHeight - 3);
-    ctx.lineTo(flagX, y + bannerHeight + 10);
+    ctx.moveTo(stripeX, y + 13);
+    ctx.lineTo(stripeX + 18, y + 12);
+    ctx.lineTo(stripeX - 6, y + bannerHeight - 8);
+    ctx.lineTo(stripeX - 24, y + bannerHeight - 7);
     ctx.closePath();
     ctx.fill();
   }
 
+  ctx.strokeStyle = "#d94f43";
+  ctx.lineWidth = compact ? 5 : 7;
+  ctx.lineJoin = "round";
+  ctx.beginPath();
+  ctx.moveTo(x + 18, y + 13);
+  ctx.lineTo(x + bannerWidth - 18, y + 13);
+  ctx.quadraticCurveTo(x + bannerWidth - 7, y + bannerHeight * 0.5, x + bannerWidth - 18, y + bannerHeight - 9);
+  ctx.lineTo(x + 18, y + bannerHeight - 9);
+  ctx.quadraticCurveTo(x + 7, y + bannerHeight * 0.5, x + 18, y + 13);
+  ctx.closePath();
+  ctx.stroke();
+
+  const colors = ["#d94f43", "#f4c542", "#1f7a83", "#3167b1"];
+  const flagCount = compact ? 8 : 14;
+  for (let i = 0; i < flagCount; i += 1) {
+    const flagX = x + 22 + i * ((bannerWidth - 44) / Math.max(1, flagCount - 1));
+    ctx.fillStyle = colors[i % colors.length];
+    ctx.beginPath();
+    ctx.moveTo(flagX - 9, y + bannerHeight - 2);
+    ctx.lineTo(flagX + 9, y + bannerHeight - 2);
+    ctx.lineTo(flagX, y + bannerHeight + (compact ? 16 : 21));
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  const pinY = y + 16;
+  ctx.fillStyle = "#1f7a83";
+  [x + 24, x + bannerWidth - 24].forEach((pinX) => {
+    ctx.beginPath();
+    ctx.arc(pinX, pinY, compact ? 6 : 8, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "#fff9ea";
+    ctx.beginPath();
+    ctx.arc(pinX - 2, pinY - 2, compact ? 2 : 3, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "#1f7a83";
+  });
+
   ctx.fillStyle = "#20242a";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.font = compact ? "900 25px Inter, system-ui, sans-serif" : "900 42px Inter, system-ui, sans-serif";
-  ctx.fillText("Happy Birthday", width / 2, y + (compact ? 22 : 27));
+  ctx.font = compact ? "900 30px Inter, system-ui, sans-serif" : "900 52px Inter, system-ui, sans-serif";
+  ctx.fillText("Happy Birthday", width / 2, y + (compact ? 40 : 50));
   ctx.fillStyle = "#d94f43";
-  ctx.font = compact ? "900 18px Inter, system-ui, sans-serif" : "900 28px Inter, system-ui, sans-serif";
-  ctx.fillText("Christian", width / 2, y + (compact ? 43 : 56));
+  ctx.font = compact ? "900 23px Inter, system-ui, sans-serif" : "900 36px Inter, system-ui, sans-serif";
+  ctx.fillText("Christian", width / 2, y + (compact ? 66 : 84));
   ctx.restore();
 }
 
@@ -1074,13 +1189,21 @@ function drawMeerkat(meerkat, now) {
   const facing = meerkat.vx < -8 ? -1 : 1;
   const walk = Math.sin(meerkat.stride);
   const eating = meerkat.eatUntil > now;
+  const partying = isBirthdayComplete();
   ctx.save();
   ctx.translate(meerkat.x, meerkat.y);
   ctx.scale(facing * scale, scale);
+  if (partying) {
+    ctx.translate(0, Math.sin(now / 130 + meerkat.x * 0.03) * 5);
+  }
 
   ctx.fillStyle = "rgba(43, 28, 18, 0.22)";
   ellipse(0, 25, 48, 13);
-  ctx.rotate(eating ? Math.sin(now / 90) * 0.04 : walk * 0.035);
+  ctx.rotate(
+    partying
+      ? Math.sin(now / 180 + meerkat.x * 0.02) * 0.09
+      : eating ? Math.sin(now / 90) * 0.04 : walk * 0.035,
+  );
 
   ctx.fillStyle = "#755037";
   ctx.beginPath();
@@ -1213,6 +1336,7 @@ function drawMeerkat(meerkat, now) {
   ctx.stroke();
 
   drawMeerkatAccessory(meerkat);
+  drawPartyMeerkatAccessory(meerkat, now);
 
   ctx.restore();
   drawNameTag(meerkat.x, meerkat.y + 38 * scale, meerkat.name);
@@ -1324,6 +1448,169 @@ function drawMeerkatAccessory(meerkat) {
     ctx.closePath();
     ctx.fill();
   }
+}
+
+function drawPartyMeerkatAccessory(meerkat, now) {
+  if (!isBirthdayComplete()) {
+    return;
+  }
+
+  const bounce = Math.sin(now / 190 + meerkat.x * 0.01) * 2;
+  const hatColors = ["#d94f43", "#f4c542", "#1f7a83", "#3167b1"];
+  const partyIndex = Math.abs(meerkat.id.split("").reduce((sum, letter) => sum + letter.charCodeAt(0), 0));
+
+  if (["professor", "byte", "tango", "kompass"].includes(meerkat.id)) {
+    drawPartySunglasses();
+  }
+
+  if (["pucki", "kruemel", "nuss", "bohne", "motte", "flitzi", "goalie"].includes(meerkat.id)) {
+    drawPartyHat(hatColors[partyIndex % hatColors.length], bounce);
+  }
+
+  if (["sentinel", "pixel", "tango", "goalie"].includes(meerkat.id)) {
+    drawPartyDrink(34, -2 + bounce, partyIndex % 2 === 0 ? "#1f7a83" : "#d94f43");
+  }
+
+  if (["byte", "professor", "nuss"].includes(meerkat.id)) {
+    drawPartyBottle(-39, -4 + bounce, partyIndex % 2 === 0 ? "#2f7a4b" : "#3167b1");
+  }
+
+  if (["flitzi", "kompass", "bohne", "motte"].includes(meerkat.id)) {
+    drawPartyNoisemaker(30, -25 + bounce, hatColors[(partyIndex + 1) % hatColors.length]);
+  }
+
+  if (["kruemel", "sentinel", "pucki"].includes(meerkat.id)) {
+    drawPartyBowtie(hatColors[(partyIndex + 2) % hatColors.length]);
+  }
+}
+
+function drawPartySunglasses() {
+  ctx.fillStyle = "#111418";
+  roundRect(-22, -57, 17, 12, 5);
+  ctx.fill();
+  roundRect(5, -57, 17, 12, 5);
+  ctx.fill();
+  ctx.strokeStyle = "#111418";
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(-5, -51);
+  ctx.lineTo(5, -51);
+  ctx.stroke();
+  ctx.fillStyle = "rgba(255,255,255,0.28)";
+  ctx.fillRect(-18, -55, 5, 2);
+  ctx.fillRect(9, -55, 5, 2);
+}
+
+function drawPartyHat(color, bounce) {
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(-18, -68 + bounce);
+  ctx.lineTo(0, -100 + bounce);
+  ctx.lineTo(18, -68 + bounce);
+  ctx.closePath();
+  ctx.fill();
+  ctx.fillStyle = "rgba(255,255,255,0.42)";
+  ctx.beginPath();
+  ctx.moveTo(-8, -72 + bounce);
+  ctx.lineTo(0, -91 + bounce);
+  ctx.lineTo(8, -72 + bounce);
+  ctx.closePath();
+  ctx.fill();
+  ctx.fillStyle = "#f4c542";
+  ctx.beginPath();
+  ctx.arc(0, -102 + bounce, 5, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+function drawPartyDrink(x, y, color) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(-0.18);
+  ctx.strokeStyle = "#6f472d";
+  ctx.lineWidth = 5;
+  ctx.lineCap = "round";
+  ctx.beginPath();
+  ctx.moveTo(-7, -2);
+  ctx.lineTo(-15, 18);
+  ctx.stroke();
+  ctx.fillStyle = "rgba(255,255,255,0.86)";
+  roundRect(-6, -23, 16, 25, 4);
+  ctx.fill();
+  ctx.fillStyle = color;
+  ctx.fillRect(-4, -8, 12, 8);
+  ctx.strokeStyle = "rgba(32,36,42,0.35)";
+  ctx.lineWidth = 1.2;
+  ctx.strokeRect(-6, -23, 16, 25);
+  ctx.restore();
+}
+
+function drawPartyBottle(x, y, color) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(0.28);
+  ctx.strokeStyle = "#6f472d";
+  ctx.lineWidth = 5;
+  ctx.lineCap = "round";
+  ctx.beginPath();
+  ctx.moveTo(8, 2);
+  ctx.lineTo(18, 20);
+  ctx.stroke();
+  ctx.fillStyle = color;
+  roundRect(-7, -26, 12, 29, 4);
+  ctx.fill();
+  ctx.fillStyle = "#f4c542";
+  ctx.fillRect(-5, -18, 8, 5);
+  ctx.fillStyle = "#d7ed9c";
+  ctx.fillRect(-4, -32, 6, 8);
+  ctx.restore();
+}
+
+function drawPartyNoisemaker(x, y, color) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(-0.15);
+  ctx.strokeStyle = "#6f472d";
+  ctx.lineWidth = 4;
+  ctx.lineCap = "round";
+  ctx.beginPath();
+  ctx.moveTo(-14, 12);
+  ctx.lineTo(-4, 2);
+  ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(-2, -2);
+  ctx.lineTo(24, -12);
+  ctx.lineTo(27, 5);
+  ctx.lineTo(-2, 6);
+  ctx.closePath();
+  ctx.fill();
+  ctx.strokeStyle = "#f4c542";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(5, -3);
+  ctx.lineTo(8, 4);
+  ctx.moveTo(14, -7);
+  ctx.lineTo(17, 3);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawPartyBowtie(color) {
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(-4, -23);
+  ctx.lineTo(-20, -31);
+  ctx.lineTo(-20, -15);
+  ctx.closePath();
+  ctx.moveTo(4, -23);
+  ctx.lineTo(20, -31);
+  ctx.lineTo(20, -15);
+  ctx.closePath();
+  ctx.fill();
+  ctx.fillStyle = "#20242a";
+  ctx.beginPath();
+  ctx.arc(0, -23, 4, 0, Math.PI * 2);
+  ctx.fill();
 }
 
 function drawFood(food) {
