@@ -224,6 +224,10 @@ h3 {
   font-weight: 900;
 }
 
+.party-complete .game-help {
+  display: none;
+}
+
 .sun {
   position: absolute;
   top: 34px;

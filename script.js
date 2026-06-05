@@ -235,6 +235,7 @@ const sim = {
   foods: [],
   crumbs: [],
   pops: [],
+  partyStartedAt: 0,
   meerkats: [],
   raptor: {
     active: false,
@@ -684,6 +685,7 @@ function findBestFoodFor(meerkat) {
 }
 
 function eatFood(meerkat, food, now) {
+  const completedBefore = isBirthdayComplete();
   sim.foods = sim.foods.filter((item) => item !== food);
   meerkat.targetFood = null;
   meerkat.eatUntil = now + 900;
@@ -707,9 +709,12 @@ function eatFood(meerkat, food, now) {
     unlockRoom(meerkat.room);
   }
 
-  reactionText.textContent = `${meerkat.name}: ${meerkat.reaction}`;
   saveState();
   updateUi();
+  reactionText.textContent =
+    !completedBefore && isBirthdayComplete()
+      ? "Party im Gehege: Happy Birthday Christian!"
+      : `${meerkat.name}: ${meerkat.reaction}`;
 }
 
 function unlockRoom(room) {
@@ -721,6 +726,8 @@ function unlockRoom(room) {
     !state.unlockedRooms.includes("secret")
   ) {
     state.unlockedRooms.push("secret");
+    sim.partyStartedAt = performance.now();
+    reactionText.textContent = "Party im Gehege: Happy Birthday Christian!";
     showRoom("secret");
   }
 }
@@ -770,6 +777,141 @@ function draw(now) {
     .forEach((meerkat) => drawMeerkat(meerkat, now));
   sim.crumbs.forEach(drawCrumb);
   sim.pops.forEach(drawPop);
+  drawBirthdayParty(now);
+}
+
+function isBirthdayComplete() {
+  return state.specials.length >= specialMeerkatCount();
+}
+
+function drawBirthdayParty(now) {
+  if (!isBirthdayComplete()) {
+    return;
+  }
+
+  const startedAt = sim.partyStartedAt || now - 4800;
+  const age = Math.max(0, now - startedAt);
+  drawPartyConfetti(now, age);
+  drawPartyBalloons(now);
+  drawBirthdayBanner(age);
+}
+
+function drawPartyConfetti(now, age) {
+  const colors = ["#d94f43", "#f4c542", "#1f7a83", "#3167b1", "#ffffff", "#e6cf55"];
+  const count = isCompactCanvas() ? 72 : 130;
+  const activeBurst = age < 7000;
+
+  ctx.save();
+  for (let i = 0; i < count; i += 1) {
+    const seed = (i * 9301 + 49297) % 233280;
+    const xBase = ((seed / 233280) * (width + 120)) - 60;
+    const speed = 42 + (i % 9) * 13;
+    const delay = (i % 17) * 120;
+    const fall = activeBurst ? Math.max(0, age - delay) : now + i * 91;
+    const y = ((fall / 1000) * speed + (i * 37) % height) % (height + 80) - 40;
+    const x = xBase + Math.sin(now / 430 + i) * (14 + (i % 5) * 3);
+    const size = 5 + (i % 4) * 2;
+
+    ctx.globalAlpha = activeBurst ? clamp((age - delay) / 500, 0, 1) : 0.82;
+    ctx.fillStyle = colors[i % colors.length];
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(now / 360 + i);
+    ctx.fillRect(-size / 2, -size / 2, size, Math.max(3, size * 0.55));
+    ctx.restore();
+  }
+  ctx.restore();
+  ctx.globalAlpha = 1;
+}
+
+function drawPartyBalloons(now) {
+  const ground = groundTop();
+  const balloons = [
+    { x: width * 0.1, y: ground + 70, color: "#d94f43", phase: 0 },
+    { x: width * 0.9, y: ground + 92, color: "#3167b1", phase: 1.8 },
+    { x: width * 0.2, y: ground + 142, color: "#f4c542", phase: 3.2 },
+    { x: width * 0.78, y: ground + 155, color: "#1f7a83", phase: 4.4 },
+  ];
+
+  ctx.save();
+  balloons.forEach((balloon) => {
+    const bob = Math.sin(now / 520 + balloon.phase) * 7;
+    const x = balloon.x + Math.sin(now / 760 + balloon.phase) * 5;
+    const y = balloon.y + bob;
+    const scale = isCompactCanvas() ? 0.72 : 1;
+
+    ctx.strokeStyle = "rgba(65, 43, 28, 0.38)";
+    ctx.lineWidth = 1.4;
+    ctx.beginPath();
+    ctx.moveTo(x, y + 27 * scale);
+    ctx.bezierCurveTo(x - 12 * scale, y + 58 * scale, x + 10 * scale, y + 88 * scale, x - 3 * scale, y + 116 * scale);
+    ctx.stroke();
+
+    ctx.fillStyle = balloon.color;
+    ctx.beginPath();
+    ctx.ellipse(x, y, 18 * scale, 23 * scale, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "rgba(255,255,255,0.45)";
+    ctx.beginPath();
+    ctx.ellipse(x - 6 * scale, y - 8 * scale, 5 * scale, 8 * scale, -0.35, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "rgba(65, 43, 28, 0.32)";
+    ctx.beginPath();
+    ctx.moveTo(x - 5 * scale, y + 21 * scale);
+    ctx.lineTo(x + 5 * scale, y + 21 * scale);
+    ctx.lineTo(x, y + 30 * scale);
+    ctx.closePath();
+    ctx.fill();
+  });
+  ctx.restore();
+}
+
+function drawBirthdayBanner(age) {
+  const compact = isCompactCanvas();
+  const bannerWidth = Math.min(width - 28, compact ? 348 : 620);
+  const bannerHeight = compact ? 58 : 74;
+  const x = width / 2 - bannerWidth / 2;
+  const targetY = compact ? 18 : 22;
+  const intro = clamp(age / 900, 0, 1);
+  const eased = 1 - Math.pow(1 - intro, 3);
+  const y = targetY - (1 - eased) * 110 + Math.sin(age / 260) * (intro < 1 ? 2 : 1.2);
+
+  ctx.save();
+  ctx.shadowColor = "rgba(44, 28, 16, 0.28)";
+  ctx.shadowBlur = 18;
+  ctx.shadowOffsetY = 10;
+  ctx.fillStyle = "rgba(255, 249, 234, 0.97)";
+  roundRect(x, y, bannerWidth, bannerHeight, 8);
+  ctx.fill();
+  ctx.shadowColor = "transparent";
+
+  ctx.strokeStyle = "#d94f43";
+  ctx.lineWidth = compact ? 4 : 5;
+  roundRect(x + 5, y + 5, bannerWidth - 10, bannerHeight - 10, 6);
+  ctx.stroke();
+
+  const colors = ["#d94f43", "#f4c542", "#1f7a83", "#3167b1"];
+  const flagCount = compact ? 9 : 15;
+  for (let i = 0; i < flagCount; i += 1) {
+    const flagX = x + 16 + i * ((bannerWidth - 32) / Math.max(1, flagCount - 1));
+    ctx.fillStyle = colors[i % colors.length];
+    ctx.beginPath();
+    ctx.moveTo(flagX - 7, y + bannerHeight - 3);
+    ctx.lineTo(flagX + 7, y + bannerHeight - 3);
+    ctx.lineTo(flagX, y + bannerHeight + 10);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  ctx.fillStyle = "#20242a";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.font = compact ? "900 25px Inter, system-ui, sans-serif" : "900 42px Inter, system-ui, sans-serif";
+  ctx.fillText("Happy Birthday", width / 2, y + (compact ? 22 : 27));
+  ctx.fillStyle = "#d94f43";
+  ctx.font = compact ? "900 18px Inter, system-ui, sans-serif" : "900 28px Inter, system-ui, sans-serif";
+  ctx.fillText("Christian", width / 2, y + (compact ? 43 : 56));
+  ctx.restore();
 }
 
 function sendToBurrow(meerkat, now, alarm = false) {
@@ -1670,6 +1812,7 @@ function updateUi() {
     button.classList.toggle("is-unlocked", unlockedRooms.includes(button.dataset.room));
   });
   tunnelStage.classList.toggle("has-secret", unlockedRooms.includes("secret"));
+  document.body.classList.toggle("party-complete", isBirthdayComplete());
 }
 
 function specialMeerkatCount() {
@@ -1681,6 +1824,7 @@ function resetGame() {
   sim.foods = [];
   sim.crumbs = [];
   sim.pops = [];
+  sim.partyStartedAt = 0;
   sim.meerkats.forEach((meerkat, index) => {
     const config = meerkatConfigs.find((item) => item.id === meerkat.id);
     meerkat.x = config.x * width;
