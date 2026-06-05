@@ -1079,7 +1079,7 @@ function drawBirthdayBanner(age) {
     : "900 46px Inter, system-ui, sans-serif";
 
   ctx.fillText(
-    "Christian",
+    "Christian!",
     width / 2,
     y + (compact ? 84 : 113)
   );
