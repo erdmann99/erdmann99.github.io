@@ -427,7 +427,9 @@ h3 {
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: var(--earth-dark);
+  background:
+    radial-gradient(circle at 35% 28%, #ffffff 0 18%, transparent 19%),
+    radial-gradient(circle at 50% 50%, #fff7d9 0 58%, #d9c57d 59% 100%);
   opacity: 0;
 }
 
@@ -1573,11 +1575,37 @@ h3 {
 }
 
 .puck-icon {
-  height: 18px;
-  margin-top: 6px;
+  position: relative;
+  height: 30px;
+  margin-top: 0;
   border-radius: 50%;
-  background: #20242a;
-  box-shadow: 0 6px 0 #111418;
+  background:
+    radial-gradient(circle at 34% 26%, #ffffff 0 16%, transparent 17%),
+    radial-gradient(circle at 50% 50%, #fff8dc 0 58%, #d9c57d 59% 100%);
+  box-shadow:
+    inset -4px -5px 0 rgba(127, 107, 48, 0.2),
+    0 3px 7px rgba(49, 31, 16, 0.18);
+}
+
+.puck-icon::before,
+.puck-icon::after {
+  content: "";
+  position: absolute;
+  border: 2px solid rgba(137, 115, 47, 0.5);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.puck-icon::before {
+  inset: 8px 6px 6px 8px;
+  border-left-color: transparent;
+  border-bottom-color: transparent;
+}
+
+.puck-icon::after {
+  inset: 5px 10px 10px 5px;
+  border-right-color: transparent;
+  border-top-color: transparent;
 }
 
 .tickle-icon::before,
@@ -1960,9 +1988,11 @@ h3 {
   }
 
   .puck-icon {
-    height: 13px;
-    margin-top: 4px;
-    box-shadow: 0 5px 0 #111418;
+    height: 25px;
+    margin-top: 0;
+    box-shadow:
+      inset -3px -4px 0 rgba(127, 107, 48, 0.2),
+      0 3px 7px rgba(49, 31, 16, 0.18);
   }
 
   .viewing-tunnels .app-shell {

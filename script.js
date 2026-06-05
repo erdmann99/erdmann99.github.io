@@ -4,7 +4,7 @@ const foodTypes = {
   cake: { label: "Kuchen", color: "#f2c34a" },
   energy: { label: "Riegel", color: "#3167b1" },
   seed: { label: "Kern", color: "#e6cf55" },
-  puck: { label: "Puck", color: "#171b20" },
+  puck: { label: "Ball", color: "#f3edcf" },
 };
 
 const rooms = {
@@ -18,7 +18,7 @@ const rooms = {
   },
   hockey: {
     title: "Hockey-Hoehle",
-    text: "Pucki hat den Schalter getroffen. An der Wand steht: Kaefertor oben rechts.",
+    text: "Pucki hat den Ball ins Tor geschossen. An der Wand steht: Kaefertor oben rechts.",
   },
   storage: {
     title: "Vorratskammer",
@@ -35,7 +35,7 @@ const rooms = {
   secret: {
     title: "Mission abgeschlossen.",
     text:
-      "Alle Erdmaennchen sind satt. Alle Bugs wurden gegessen. Alle Pucks wurden versenkt. Und die ganze Kolonie ist sich einig: Alles Gute zum Geburtstag!",
+      "Alle Erdmaennchen sind satt. Alle Bugs wurden gegessen. Alle Baelle wurden versenkt. Und die ganze Kolonie ist sich einig: Alles Gute zum Geburtstag!",
   },
 };
 
@@ -60,7 +60,7 @@ const meerkatConfigs = [
     x: 0.42,
     y: 0.7,
     accent: "#3167b1",
-    reaction: "GOOOAL! Snack sauber angenommen.",
+    reaction: "Goooal! Ball sauber verwandelt.",
   },
   {
     id: "sentinel",
@@ -233,6 +233,7 @@ const sim = {
   foods: [],
   crumbs: [],
   pops: [],
+  shots: [],
   partyStartedAt: 0,
   meerkats: [],
   raptor: {
@@ -567,6 +568,10 @@ function update(dt, now) {
     crumb.x += crumb.vx * dt;
     return crumb.age < 0.9;
   });
+  sim.shots = sim.shots.filter((shot) => {
+    shot.age += dt;
+    return shot.age < shot.duration + 0.28;
+  });
 
   inviteHungryTunnelMeerkats(now);
   sim.meerkats.forEach((meerkat) => updateMeerkat(meerkat, dt, now));
@@ -726,6 +731,9 @@ function eatFood(meerkat, food, now) {
       color: foodTypes[food.type].color,
     });
   }
+  if (food.type === "puck") {
+    startGoalShot(meerkat, food, now);
+  }
 
   if (meerkat.special && !state.specials.includes(meerkat.id)) {
     state.specials.push(meerkat.id);
@@ -738,6 +746,20 @@ function eatFood(meerkat, food, now) {
     !completedBefore && isBirthdayComplete()
       ? "Party im Gehege: Happy Birthday Christian!"
       : `${meerkat.name}: ${meerkat.reaction}`;
+}
+
+function startGoalShot(meerkat, food, now) {
+  const target = goalTarget();
+  sim.shots.push({
+    x0: food.x,
+    y0: food.y,
+    x1: target.x,
+    y1: target.y,
+    age: 0,
+    duration: 0.95,
+  });
+  meerkat.talk = "Goooal!";
+  meerkat.talkUntil = now + 2400;
 }
 
 function unlockRoom(room) {
@@ -798,6 +820,7 @@ function draw(now) {
     .filter((meerkat) => meerkat.location !== "tunnel")
     .sort((a, b) => a.y - b.y)
     .forEach((meerkat) => drawMeerkat(meerkat, now));
+  sim.shots.forEach(drawGoalShot);
   sim.crumbs.forEach(drawCrumb);
   sim.pops.forEach(drawPop);
   drawBirthdayParty(now);
@@ -926,101 +949,141 @@ function drawPartyBalloons(now) {
 function drawBirthdayBanner(age) {
   const compact = isCompactCanvas();
   const bannerWidth = Math.min(width - 24, compact ? 352 : 720);
-  const bannerHeight = compact ? 86 : 112;
+
+  // Taller banner so both text lines fit
+  const bannerHeight = compact ? 112 : 148;
+
   const x = width / 2 - bannerWidth / 2;
   const targetY = compact ? 16 : 18;
   const intro = clamp(age / 900, 0, 1);
   const eased = 1 - Math.pow(1 - intro, 3);
-  const y = targetY - (1 - eased) * 110 + Math.sin(age / 260) * (intro < 1 ? 2 : 1.2);
+  const y =
+    targetY -
+    (1 - eased) * 110 +
+    Math.sin(age / 260) * (intro < 1 ? 2 : 1.2);
+
   const ropeY = y + (compact ? 13 : 17);
 
   ctx.save();
+
   ctx.strokeStyle = "rgba(78, 49, 30, 0.72)";
   ctx.lineWidth = compact ? 4 : 5;
   ctx.lineCap = "round";
   ctx.beginPath();
   ctx.moveTo(Math.max(0, x - 32), ropeY);
-  ctx.bezierCurveTo(x + bannerWidth * 0.25, ropeY - 24, x + bannerWidth * 0.75, ropeY + 24, Math.min(width, x + bannerWidth + 32), ropeY);
+  ctx.bezierCurveTo(
+    x + bannerWidth * 0.25,
+    ropeY - 24,
+    x + bannerWidth * 0.75,
+    ropeY + 24,
+    Math.min(width, x + bannerWidth + 32),
+    ropeY
+  );
   ctx.stroke();
 
   ctx.shadowColor = "rgba(44, 28, 16, 0.28)";
   ctx.shadowBlur = 18;
   ctx.shadowOffsetY = 10;
-  const bannerGradient = ctx.createLinearGradient(x, y, x, y + bannerHeight);
+
+  const bannerGradient = ctx.createLinearGradient(
+    x,
+    y,
+    x,
+    y + bannerHeight
+  );
   bannerGradient.addColorStop(0, "#fff7dc");
   bannerGradient.addColorStop(0.5, "#fff0bb");
   bannerGradient.addColorStop(1, "#f0c45a");
+
   ctx.fillStyle = bannerGradient;
+
   ctx.beginPath();
   ctx.moveTo(x + 16, y + 10);
   ctx.lineTo(x + bannerWidth - 16, y + 10);
-  ctx.quadraticCurveTo(x + bannerWidth - 4, y + bannerHeight * 0.5, x + bannerWidth - 16, y + bannerHeight - 6);
-  ctx.lineTo(x + bannerWidth * 0.56, y + bannerHeight - 1);
-  ctx.quadraticCurveTo(x + bannerWidth * 0.5, y + bannerHeight - 12, x + bannerWidth * 0.44, y + bannerHeight - 1);
+  ctx.quadraticCurveTo(
+    x + bannerWidth - 4,
+    y + bannerHeight * 0.5,
+    x + bannerWidth - 16,
+    y + bannerHeight - 6
+  );
   ctx.lineTo(x + 16, y + bannerHeight - 6);
-  ctx.quadraticCurveTo(x + 4, y + bannerHeight * 0.5, x + 16, y + 10);
+  ctx.quadraticCurveTo(
+    x + 4,
+    y + bannerHeight * 0.5,
+    x + 16,
+    y + 10
+  );
   ctx.closePath();
   ctx.fill();
-  ctx.shadowColor = "transparent";
 
-  ctx.fillStyle = "rgba(255,255,255,0.34)";
-  for (let i = 0; i < 7; i += 1) {
-    const stripeX = x + 22 + i * (bannerWidth / 7);
-    ctx.beginPath();
-    ctx.moveTo(stripeX, y + 13);
-    ctx.lineTo(stripeX + 18, y + 12);
-    ctx.lineTo(stripeX - 6, y + bannerHeight - 8);
-    ctx.lineTo(stripeX - 24, y + bannerHeight - 7);
-    ctx.closePath();
-    ctx.fill();
-  }
+  ctx.shadowColor = "transparent";
 
   ctx.strokeStyle = "#d94f43";
   ctx.lineWidth = compact ? 5 : 7;
   ctx.lineJoin = "round";
+
   ctx.beginPath();
   ctx.moveTo(x + 18, y + 13);
   ctx.lineTo(x + bannerWidth - 18, y + 13);
-  ctx.quadraticCurveTo(x + bannerWidth - 7, y + bannerHeight * 0.5, x + bannerWidth - 18, y + bannerHeight - 9);
-  ctx.lineTo(x + 18, y + bannerHeight - 9);
-  ctx.quadraticCurveTo(x + 7, y + bannerHeight * 0.5, x + 18, y + 13);
+  ctx.lineTo(x + bannerWidth - 18, y + bannerHeight - 12);
+  ctx.lineTo(x + 18, y + bannerHeight - 12);
   ctx.closePath();
   ctx.stroke();
 
+  // Flags underneath
   const colors = ["#d94f43", "#f4c542", "#1f7a83", "#3167b1"];
   const flagCount = compact ? 8 : 14;
-  for (let i = 0; i < flagCount; i += 1) {
-    const flagX = x + 22 + i * ((bannerWidth - 44) / Math.max(1, flagCount - 1));
+
+  for (let i = 0; i < flagCount; i++) {
+    const flagX =
+      x + 22 + i * ((bannerWidth - 44) / Math.max(1, flagCount - 1));
+
     ctx.fillStyle = colors[i % colors.length];
+
     ctx.beginPath();
-    ctx.moveTo(flagX - 9, y + bannerHeight - 2);
-    ctx.lineTo(flagX + 9, y + bannerHeight - 2);
-    ctx.lineTo(flagX, y + bannerHeight + (compact ? 16 : 21));
+    ctx.moveTo(flagX - 9, y + bannerHeight + 2);
+    ctx.lineTo(flagX + 9, y + bannerHeight + 2);
+    ctx.lineTo(flagX, y + bannerHeight + (compact ? 22 : 28));
     ctx.closePath();
     ctx.fill();
   }
 
-  const pinY = y + 16;
+  // Pins
   ctx.fillStyle = "#1f7a83";
+
   [x + 24, x + bannerWidth - 24].forEach((pinX) => {
     ctx.beginPath();
-    ctx.arc(pinX, pinY, compact ? 6 : 8, 0, Math.PI * 2);
+    ctx.arc(pinX, y + 18, compact ? 6 : 8, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = "#fff9ea";
-    ctx.beginPath();
-    ctx.arc(pinX - 2, pinY - 2, compact ? 2 : 3, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = "#1f7a83";
   });
 
-  ctx.fillStyle = "#20242a";
+  // Text
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.font = compact ? "900 30px Inter, system-ui, sans-serif" : "900 52px Inter, system-ui, sans-serif";
-  ctx.fillText("Happy Birthday", width / 2, y + (compact ? 40 : 50));
+
+  ctx.fillStyle = "#20242a";
+  ctx.font = compact
+    ? "900 32px Inter, system-ui, sans-serif"
+    : "900 56px Inter, system-ui, sans-serif";
+
+  ctx.fillText(
+    "Happy Birthday",
+    width / 2,
+    y + (compact ? 45 : 62)
+  );
+
   ctx.fillStyle = "#d94f43";
-  ctx.font = compact ? "900 23px Inter, system-ui, sans-serif" : "900 36px Inter, system-ui, sans-serif";
-  ctx.fillText("Christian", width / 2, y + (compact ? 66 : 84) + 5);
+
+  ctx.font = compact
+    ? "900 31px Inter, system-ui, sans-serif"
+    : "900 46px Inter, system-ui, sans-serif";
+
+  ctx.fillText(
+    "Christian",
+    width / 2,
+    y + (compact ? 84 : 113)
+  );
+
   ctx.restore();
 }
 
@@ -1740,12 +1803,93 @@ function drawFoodIcon(type, x, y, scale) {
     ctx.fill();
   }
   if (type === "puck") {
-    ctx.fillStyle = "#11161c";
-    ellipse(0, 4, 14, 7);
-    ctx.fillStyle = "#20242a";
-    ellipse(0, -2, 14, 7);
+    drawFieldHockeyBall(0, 0, 1);
   }
   ctx.restore();
+}
+
+function drawFieldHockeyBall(x, y, scale) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(scale, scale);
+  ctx.fillStyle = "rgba(61,45,22,0.18)";
+  ellipse(2, 9, 12, 4);
+  const gradient = ctx.createRadialGradient(-5, -6, 3, 0, 0, 15);
+  gradient.addColorStop(0, "#fffdf0");
+  gradient.addColorStop(0.62, "#f4edc9");
+  gradient.addColorStop(1, "#d9cb8e");
+  ctx.fillStyle = gradient;
+  circle(0, 0, 14);
+  ctx.strokeStyle = "rgba(151,128,60,0.42)";
+  ctx.lineWidth = 1.4;
+  ctx.beginPath();
+  ctx.arc(0, 0, 9, -0.2 * Math.PI, 0.72 * Math.PI);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(0, 0, 5, 0.9 * Math.PI, 1.72 * Math.PI);
+  ctx.stroke();
+  ctx.fillStyle = "rgba(255,255,255,0.74)";
+  circle(-5, -6, 3);
+  ctx.restore();
+}
+
+function drawGoalShot(shot) {
+  const progress = clamp(shot.age / shot.duration, 0, 1);
+  const { x, y } = shotPoint(shot, progress);
+  const spin = shot.age * 16;
+  drawShotTrail(shot, progress);
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(spin);
+  drawFieldHockeyBall(0, 0, 1.05);
+  ctx.restore();
+
+  if (progress > 0.8) {
+    const flash = (progress - 0.8) / 0.2;
+    ctx.save();
+    ctx.globalAlpha = Math.max(0, 1 - flash);
+    ctx.strokeStyle = "#f4c542";
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.arc(shot.x1, shot.y1, 18 + flash * 42, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+  }
+}
+
+function drawShotTrail(shot, progress) {
+  if (progress <= 0.04) {
+    return;
+  }
+  ctx.save();
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  ctx.strokeStyle = "rgba(255, 248, 220, 0.72)";
+  ctx.lineWidth = 5;
+  ctx.beginPath();
+  const start = Math.max(0, progress - 0.32);
+  for (let i = 0; i <= 9; i += 1) {
+    const sample = start + (progress - start) * (i / 9);
+    const point = shotPoint(shot, sample);
+    if (i === 0) {
+      ctx.moveTo(point.x, point.y);
+    } else {
+      ctx.lineTo(point.x, point.y);
+    }
+  }
+  ctx.stroke();
+  ctx.strokeStyle = "rgba(49, 103, 177, 0.38)";
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.restore();
+}
+
+function shotPoint(shot, progress) {
+  const eased = 1 - (1 - progress) ** 3;
+  return {
+    x: shot.x0 + (shot.x1 - shot.x0) * eased,
+    y: shot.y0 + (shot.y1 - shot.y0) * eased - Math.sin(progress * Math.PI) * 82,
+  };
 }
 
 function drawNameTag(x, y, text) {
@@ -1860,6 +2004,13 @@ function drawGoal(x, y) {
     ctx.stroke();
   }
   ctx.globalAlpha = 1;
+}
+
+function goalTarget() {
+  return {
+    x: width - 74,
+    y: groundTop() + 103,
+  };
 }
 
 function drawGrass(x, y) {
@@ -2295,6 +2446,7 @@ function resetGame() {
   sim.foods = [];
   sim.crumbs = [];
   sim.pops = [];
+  sim.shots = [];
   sim.partyStartedAt = 0;
   sim.raptor.active = false;
   sim.raptor.mode = "idle";
