@@ -238,7 +238,8 @@ h3 {
 
 .topbar,
 .status-band,
-.scene-enclosure .scene-heading {
+.scene-enclosure .scene-heading,
+.scene-tunnels .scene-heading {
   display: none;
 }
 
@@ -1167,7 +1168,7 @@ h3 {
 .room {
   z-index: 3;
   position: absolute;
-  display: grid;
+  display: none;
   place-items: center;
   gap: 5px;
   width: 168px;
@@ -1395,6 +1396,7 @@ h3 {
 }
 
 .room-panel {
+  display: none;
   margin-top: 12px;
   padding: 16px;
   border: 2px solid rgba(109, 75, 54, 0.14);
@@ -1444,6 +1446,7 @@ h3 {
 }
 
 .food-button {
+  position: relative;
   display: grid;
   place-items: center;
   gap: 5px;
@@ -1459,6 +1462,38 @@ h3 {
 .food-button.is-selected {
   color: var(--white);
   background: var(--teal);
+}
+
+.food-button.is-complete {
+  color: #20301f;
+  background: #d7ed9c;
+  box-shadow:
+    inset 0 0 0 2px rgba(47, 122, 75, 0.38),
+    0 8px 18px rgba(47, 122, 75, 0.18);
+}
+
+.food-button.is-complete::after {
+  content: "✓";
+  position: absolute;
+  right: 6px;
+  top: 5px;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  color: var(--white);
+  background: #2f7a4b;
+  font-size: 0.78rem;
+  line-height: 1;
+}
+
+.food-button.is-selected.is-complete {
+  color: var(--white);
+  background: linear-gradient(135deg, #1f7a83 0 58%, #2f7a4b 59%);
+  box-shadow:
+    inset 0 0 0 2px rgba(255, 255, 255, 0.32),
+    0 10px 22px rgba(31, 122, 131, 0.22);
 }
 
 .tickle-button.is-selected {
@@ -1889,31 +1924,31 @@ h3 {
     left: 50%;
     bottom: max(8px, env(safe-area-inset-bottom));
     grid-template-columns: repeat(6, minmax(0, 1fr));
-    gap: 4px;
-    padding: 6px;
-    width: calc(100vw - 14px);
+    gap: 5px;
+    padding: 7px;
+    width: calc(100vw - 12px);
     margin: 0;
     transform: translateX(-50%);
   }
 
   .food-button {
-    gap: 2px;
-    min-height: 50px;
-    padding: 4px 2px;
-    font-size: 0.6rem;
+    gap: 3px;
+    min-height: 58px;
+    padding: 5px 2px;
+    font-size: 0.66rem;
     line-height: 1;
     white-space: nowrap;
   }
 
   .food-icon {
-    width: 22px;
-    height: 22px;
+    width: 25px;
+    height: 25px;
   }
 
   .bug-icon::before,
   .bug-icon::after {
-    top: 7px;
-    width: 10px;
+    top: 8px;
+    width: 11px;
   }
 
   .bug-icon::before {

@@ -99,7 +99,7 @@ const meerkatConfigs = [
   },
   {
     id: "pixel",
-    name: "Pixel",
+    name: "Spatz",
     special: false,
     room: "sleep",
     favorites: ["coffee", "bug"],
@@ -111,7 +111,7 @@ const meerkatConfigs = [
   },
   {
     id: "flitzi",
-    name: "Flitzi",
+    name: "John of Us",
     special: false,
     room: "sleep",
     favorites: ["bug", "seed"],
@@ -123,7 +123,7 @@ const meerkatConfigs = [
   },
   {
     id: "motte",
-    name: "Motte",
+    name: "Frodo",
     special: false,
     room: "sleep",
     favorites: ["cake"],
@@ -135,7 +135,7 @@ const meerkatConfigs = [
   },
   {
     id: "goalie",
-    name: "Goalie",
+    name: "Arthur Dent",
     special: false,
     room: "hockey",
     favorites: ["puck", "energy"],
@@ -159,7 +159,7 @@ const meerkatConfigs = [
   },
   {
     id: "tango",
-    name: "Tango",
+    name: "Marvin",
     special: false,
     room: "birthday",
     favorites: ["cake", "energy"],
@@ -239,10 +239,14 @@ const sim = {
   meerkats: [],
   raptor: {
     active: false,
+    mode: "idle",
     x: 0,
     y: 0,
     vx: 0,
+    vy: 0,
+    rotation: 0,
     direction: 1,
+    targetX: 0,
     nextAt: performance.now() + 9000,
     alarmUntil: 0,
   },
@@ -359,7 +363,11 @@ function wireEvents() {
 
   foodButtons.forEach((button) => {
     button.addEventListener("click", () => selectFood(button.dataset.food));
-    button.addEventListener("pointerdown", (event) => startFoodDrag(event, button.dataset.food));
+    button.addEventListener("pointerdown", (event) => {
+      if (allowsFoodDrag(event)) {
+        startFoodDrag(event, button.dataset.food);
+      }
+    });
   });
 
   canvas.addEventListener("pointerdown", onCanvasPointerDown);
@@ -403,7 +411,11 @@ function selectFood(type) {
   state.selectedFood = type;
   saveState();
   updateUi();
-  reactionText.textContent = `${foodTypes[type].label} ausgewaehlt. Tippe ins Gehege oder ziehe es hinein.`;
+  reactionText.textContent = `${foodTypes[type].label} ausgewaehlt. Tippe ins Gehege, um es abzulegen.`;
+}
+
+function allowsFoodDrag(event) {
+  return !isCompactCanvas() && event.pointerType === "mouse";
 }
 
 function startFoodDrag(event, type) {
@@ -439,7 +451,12 @@ function moveGhost(x, y) {
 
 function onCanvasPointerDown(event) {
   const point = eventToCanvas(event);
-  grabbedFood = findFoodAt(point.x, point.y);
+  if (hitRaptor(point)) {
+    knockDownRaptor(performance.now());
+    return;
+  }
+
+  grabbedFood = allowsFoodDrag(event) ? findFoodAt(point.x, point.y) : null;
   if (grabbedFood) {
     canvas.setPointerCapture(event.pointerId);
     grabbedFood.dragging = true;
@@ -1025,7 +1042,7 @@ function drawBirthdayBanner(age) {
   ctx.fillText("Happy Birthday", width / 2, y + (compact ? 40 : 50));
   ctx.fillStyle = "#d94f43";
   ctx.font = compact ? "900 23px Inter, system-ui, sans-serif" : "900 36px Inter, system-ui, sans-serif";
-  ctx.fillText("Christian", width / 2, y + (compact ? 66 : 84));
+  ctx.fillText("Christian", width / 2, y + (compact ? 66 : 84) + 5);
   ctx.restore();
 }
 
@@ -1050,6 +1067,14 @@ function enterTunnel(meerkat, now, entranceId) {
 
 function updateRaptor(dt, now) {
   const raptor = sim.raptor;
+  if (isBirthdayComplete()) {
+    raptor.active = false;
+    raptor.mode = "idle";
+    raptor.nextAt = Infinity;
+    raptor.alarmUntil = 0;
+    return;
+  }
+
   if (!raptor.active && now > raptor.nextAt) {
     startRaptor(now);
   }
@@ -1057,31 +1082,85 @@ function updateRaptor(dt, now) {
     return;
   }
 
+  if (raptor.mode === "falling") {
+    raptor.vy += 780 * dt;
+    raptor.x += raptor.vx * dt;
+    raptor.y += raptor.vy * dt;
+    raptor.rotation += raptor.direction * dt * 5.4;
+    if (raptor.y > height + 150) {
+      raptor.active = false;
+      raptor.mode = "idle";
+      raptor.nextAt = now + random(19000, 33000);
+      raptor.alarmUntil = 0;
+    }
+    return;
+  }
+
   raptor.x += raptor.vx * dt;
   raptor.y += Math.sin(now / 180) * 0.35;
   if (
-    (raptor.direction > 0 && raptor.x > width + 160) ||
-    (raptor.direction < 0 && raptor.x < -160)
+    (raptor.direction > 0 && raptor.x >= raptor.targetX) ||
+    (raptor.direction < 0 && raptor.x <= raptor.targetX)
   ) {
-    raptor.active = false;
-    raptor.nextAt = now + random(17000, 30000);
-    raptor.alarmUntil = now + 1600;
+    raptor.x = raptor.targetX;
+    raptor.vx = 0;
+    raptor.mode = "hovering";
+    raptor.alarmUntil = Infinity;
   }
 }
 
+function hitRaptor(point) {
+  const raptor = sim.raptor;
+  if (!raptor.active || raptor.mode === "falling" || isBirthdayComplete()) {
+    return false;
+  }
+  return Math.abs(point.x - raptor.x) < 145 && Math.abs(point.y - raptor.y) < 78;
+}
+
+function knockDownRaptor(now) {
+  const raptor = sim.raptor;
+  if (!raptor.active || raptor.mode === "falling") {
+    return;
+  }
+
+  raptor.mode = "falling";
+  raptor.vx = raptor.direction * 70;
+  raptor.vy = 80;
+  raptor.alarmUntil = now + 650;
+  reactionText.textContent = "Greifvogel vertrieben. Die Erdmännchen kommen zurück!";
+
+  sim.meerkats.forEach((meerkat) => {
+    if (meerkat.location === "tunnel") {
+      meerkat.undergroundUntil = Math.min(meerkat.undergroundUntil, now + random(600, 1400));
+    }
+    if (meerkat.location === "entering") {
+      meerkat.location = "surface";
+      meerkat.targetFood = nearestFavoriteFood(meerkat);
+      setRandomWander(meerkat, now);
+    }
+  });
+}
+
 function startRaptor(now) {
+  if (isBirthdayComplete()) {
+    return;
+  }
   const raptor = sim.raptor;
   raptor.active = true;
+  raptor.mode = "flying";
   raptor.direction = Math.random() > 0.5 ? 1 : -1;
   raptor.x = raptor.direction > 0 ? -150 : width + 150;
   raptor.y = random(58, Math.max(86, groundTop() - 80));
   raptor.vx = raptor.direction * random(185, 260);
-  raptor.alarmUntil = now + 4200;
+  raptor.vy = 0;
+  raptor.rotation = 0;
+  raptor.targetX = width * random(0.32, 0.68);
+  raptor.alarmUntil = Infinity;
 
   const sentinel = sim.meerkats.find((meerkat) => meerkat.id === "sentinel") || sim.meerkats[0];
   sentinel.talk = "GREIFVOGEL!";
   sentinel.talkUntil = now + 2500;
-  reactionText.textContent = "Sentinel schlägt Alarm: Greifvogel über dem Gehege!";
+  reactionText.textContent = "Sentinel schlägt Alarm: Tippe den Greifvogel an!";
 
   sim.meerkats.forEach((meerkat) => {
     if (meerkat.location === "surface" || meerkat.location === "entering") {
@@ -1091,7 +1170,11 @@ function startRaptor(now) {
 }
 
 function isRaptorDanger() {
-  return sim.raptor.active || performance.now() < sim.raptor.alarmUntil;
+  const raptor = sim.raptor;
+  return (
+    !isBirthdayComplete() &&
+    ((raptor.active && raptor.mode !== "falling") || performance.now() < raptor.alarmUntil)
+  );
 }
 
 function updateTunnelMeerkat(meerkat, dt, now) {
@@ -1354,6 +1437,7 @@ function drawRaptor(now) {
   const wing = Math.sin(now / 90) * 18;
   ctx.save();
   ctx.translate(raptor.x, raptor.y);
+  ctx.rotate(raptor.rotation || 0);
   ctx.scale(raptor.direction, 1);
   ctx.fillStyle = "rgba(38, 26, 20, 0.18)";
   ctx.beginPath();
@@ -1875,24 +1959,7 @@ function drawTunnel(now) {
   );
 
   drawTunnelTexture();
-  drawTunnelRoomGlow("sleep", 0.08, 0.37, 0.2, 0.18);
-  drawTunnelRoomGlow("server", 0.2, 0.07, 0.18, 0.15);
-  drawTunnelRoomGlow("hockey", 0.74, 0.07, 0.18, 0.15);
-  drawTunnelRoomGlow("storage", 0.09, 0.68, 0.2, 0.15);
-  drawTunnelRoomGlow("birthday", 0.42, 0.69, 0.18, 0.15);
-  drawTunnelRoomGlow("family", 0.73, 0.69, 0.19, 0.15);
-  if (state.unlockedRooms.includes("secret")) {
-    drawTunnelPath(
-      [
-        [0.5, 0.28],
-        [0.5, 0.16],
-        [0.5, 0.08],
-      ],
-      46,
-      "rgba(255, 214, 85, 0.85)",
-    );
-    drawTunnelRoomGlow("secret", 0.42, 0.02, 0.16, 0.13);
-  }
+  drawTunnelEasterEggs(now);
 
   sim.meerkats
     .filter((meerkat) => meerkat.location === "tunnel")
@@ -1951,6 +2018,129 @@ function drawTunnelRoomGlow(roomId, x, y, w, h) {
     (w + 0.08) * tunnelWidth,
     (h + 0.08) * tunnelHeight,
   );
+}
+
+function drawTunnelEasterEggs(now) {
+  drawTunnelSideRoom(0.2, 0.08, 0.18, 0.15, "rgba(74, 158, 175, 0.22)");
+  drawDataCenterEgg(0.29 * tunnelWidth, 0.145 * tunnelHeight, now);
+
+  drawTunnelSideRoom(0.74, 0.08, 0.18, 0.15, "rgba(49, 103, 177, 0.2)");
+  drawHockeyEgg(0.83 * tunnelWidth, 0.15 * tunnelHeight);
+
+  drawTunnelSideRoom(0.1, 0.68, 0.2, 0.15, "rgba(244, 197, 66, 0.18)");
+  drawBeerCellarEgg(0.2 * tunnelWidth, 0.75 * tunnelHeight);
+}
+
+function drawTunnelSideRoom(x, y, w, h, glow) {
+  const t = tunnelCtx;
+  const px = x * tunnelWidth;
+  const py = y * tunnelHeight;
+  const pw = w * tunnelWidth;
+  const ph = h * tunnelHeight;
+  const radius = Math.max(pw, ph);
+  const gradient = t.createRadialGradient(px + pw / 2, py + ph / 2, 8, px + pw / 2, py + ph / 2, radius);
+  gradient.addColorStop(0, glow);
+  gradient.addColorStop(1, "rgba(255, 210, 130, 0)");
+  t.fillStyle = gradient;
+  t.fillRect(px - pw * 0.25, py - ph * 0.25, pw * 1.5, ph * 1.5);
+
+  t.save();
+  t.fillStyle = "rgba(30, 19, 14, 0.72)";
+  t.strokeStyle = "rgba(255, 218, 150, 0.18)";
+  t.lineWidth = 3;
+  roundRectFor(t, px, py, pw, ph, 18);
+  t.fill();
+  t.stroke();
+  t.restore();
+}
+
+function drawDataCenterEgg(cx, cy, now) {
+  const t = tunnelCtx;
+  const rackW = Math.max(24, tunnelWidth * 0.032);
+  const rackH = Math.max(58, tunnelHeight * 0.09);
+  t.save();
+  t.translate(cx, cy);
+  for (let i = -1; i <= 1; i += 1) {
+    const x = i * (rackW + 8);
+    t.fillStyle = "#20242a";
+    roundRectFor(t, x - rackW / 2, -rackH / 2, rackW, rackH, 5);
+    t.fill();
+    t.fillStyle = "#35444f";
+    for (let row = 0; row < 5; row += 1) {
+      t.fillRect(x - rackW / 2 + 4, -rackH / 2 + 8 + row * 10, rackW - 8, 4);
+    }
+    for (let led = 0; led < 4; led += 1) {
+      t.fillStyle = Math.sin(now / 180 + i * 2 + led) > 0 ? "#79ff9f" : "#1f7a83";
+      t.beginPath();
+      t.arc(x + rackW / 2 - 7, -rackH / 2 + 9 + led * 13, 2.2, 0, Math.PI * 2);
+      t.fill();
+    }
+  }
+  t.strokeStyle = "rgba(121, 255, 159, 0.34)";
+  t.lineWidth = 1.5;
+  for (let i = -1; i <= 1; i += 1) {
+    t.beginPath();
+    t.moveTo(i * (rackW + 8), rackH / 2 - 2);
+    t.quadraticCurveTo(0, rackH / 2 + 18 + i * 4, -i * 14, rackH / 2 + 26);
+    t.stroke();
+  }
+  t.restore();
+}
+
+function drawHockeyEgg(cx, cy) {
+  const t = tunnelCtx;
+  t.save();
+  t.translate(cx, cy);
+  t.strokeStyle = "#d7c2a4";
+  t.lineWidth = 5;
+  t.lineCap = "round";
+  t.beginPath();
+  t.moveTo(-34, -28);
+  t.lineTo(9, 28);
+  t.lineTo(31, 20);
+  t.moveTo(31, -29);
+  t.lineTo(-8, 29);
+  t.lineTo(-31, 22);
+  t.stroke();
+  t.fillStyle = "#111418";
+  t.beginPath();
+  t.ellipse(0, 33, 19, 7, 0, 0, Math.PI * 2);
+  t.fill();
+  t.fillStyle = "#3167b1";
+  t.fillRect(-37, -32, 13, 7);
+  t.fillRect(24, -33, 13, 7);
+  t.restore();
+}
+
+function drawBeerCellarEgg(cx, cy) {
+  const t = tunnelCtx;
+  t.save();
+  t.translate(cx, cy);
+  t.fillStyle = "rgba(28, 17, 12, 0.72)";
+  roundRectFor(t, -52, 8, 104, 12, 5);
+  t.fill();
+  t.fillStyle = "#6d4b36";
+  roundRectFor(t, -44, -20, 88, 10, 4);
+  t.fill();
+  const bottles = [-36, -20, -4, 15, 32];
+  bottles.forEach((x, index) => {
+    t.fillStyle = index % 2 ? "#2f7a4b" : "#3167b1";
+    roundRectFor(t, x - 5, -39, 10, 28, 4);
+    t.fill();
+    t.fillStyle = "#d7ed9c";
+    t.fillRect(x - 3, -47, 6, 9);
+    t.fillStyle = "#f4c542";
+    t.fillRect(x - 4, -27, 8, 5);
+  });
+  t.fillStyle = "#f4c542";
+  t.beginPath();
+  t.ellipse(0, 22, 22, 9, 0, 0, Math.PI * 2);
+  t.fill();
+  t.fillStyle = "#fff9ea";
+  t.beginPath();
+  t.arc(9, 17, 5, 0, Math.PI * 2);
+  t.fill();
+  t.restore();
 }
 
 function drawTunnelMeerkat(meerkat) {
@@ -2093,7 +2283,13 @@ function updateUi() {
   roomCount.textContent =
     unlockedRooms.length === 1 ? "1 Kammer" : `${unlockedRooms.length} Kammern`;
   foodButtons.forEach((button) => {
+    const foodType = button.dataset.food;
+    const isComplete = isFoodComplete(foodType);
     button.classList.toggle("is-selected", button.dataset.food === state.selectedFood);
+    button.classList.toggle("is-complete", isComplete);
+    button.title = isComplete
+      ? `${foodTypes[foodType].label}: erledigt`
+      : `${foodTypes[foodType].label} auswaehlen`;
   });
   roomButtons.forEach((button) => {
     button.classList.toggle("is-unlocked", unlockedRooms.includes(button.dataset.room));
@@ -2106,12 +2302,29 @@ function specialMeerkatCount() {
   return meerkatConfigs.filter((meerkat) => meerkat.special).length;
 }
 
+function isFoodComplete(type) {
+  const matchingSpecials = meerkatConfigs.filter(
+    (meerkat) => meerkat.special && meerkat.favorites.includes(type),
+  );
+  return (
+    matchingSpecials.length > 0 &&
+    matchingSpecials.every((meerkat) => state.specials.includes(meerkat.id))
+  );
+}
+
 function resetGame() {
   state = defaultState();
   sim.foods = [];
   sim.crumbs = [];
   sim.pops = [];
   sim.partyStartedAt = 0;
+  sim.raptor.active = false;
+  sim.raptor.mode = "idle";
+  sim.raptor.vx = 0;
+  sim.raptor.vy = 0;
+  sim.raptor.rotation = 0;
+  sim.raptor.nextAt = performance.now() + 9000;
+  sim.raptor.alarmUntil = 0;
   sim.meerkats.forEach((meerkat, index) => {
     const config = meerkatConfigs.find((item) => item.id === meerkat.id);
     meerkat.x = config.x * width;
