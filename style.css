@@ -696,7 +696,7 @@ h3 {
   --idle-delay: -1.2s;
 }
 
-.sentinel {
+.braui {
   left: 56%;
   bottom: 118px;
   --idle-delay: -2.1s;
@@ -1344,7 +1344,7 @@ h3 {
   animation-delay: -1.6s;
 }
 
-.tunnel-sentinel {
+.tunnel-braui {
   left: 16%;
   bottom: 190px;
   --tx: 52px;
@@ -1684,7 +1684,7 @@ h3 {
     bottom: 242px;
   }
 
-  .sentinel {
+  .braui {
     left: 65%;
     bottom: 330px;
   }
@@ -1793,7 +1793,7 @@ h3 {
     top: 258px;
   }
 
-  .tunnel-sentinel {
+  .tunnel-braui {
     left: 47%;
     bottom: 330px;
   }
@@ -1920,7 +1920,7 @@ h3 {
     bottom: 278px;
   }
 
-  .sentinel {
+  .braui {
     left: 57%;
     bottom: 392px;
   }

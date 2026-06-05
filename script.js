@@ -22,7 +22,7 @@ const rooms = {
   },
   storage: {
     title: "Vorratskammer",
-    text: "Sentinel hat den Eingang markiert. Bestand: Kerne stabil, Kuchenbestand weiterhin kritisch.",
+    text: "Braui hat den Eingang markiert. Bestand: Kerne stabil, Kuchenbestand weiterhin kritisch.",
   },
   birthday: {
     title: "Geburtstagskammer",
@@ -63,8 +63,8 @@ const meerkatConfigs = [
     reaction: "Goooal! Ball sauber verwandelt.",
   },
   {
-    id: "sentinel",
-    name: "Sentinel",
+    id: "braui",
+    name: "Braui",
     special: true,
     room: "storage",
     favorites: ["seed"],
@@ -1198,10 +1198,10 @@ function startRaptor(now) {
   raptor.targetX = width * random(0.32, 0.68);
   raptor.alarmUntil = Infinity;
 
-  const sentinel = sim.meerkats.find((meerkat) => meerkat.id === "sentinel") || sim.meerkats[0];
-  sentinel.talk = "GREIFVOGEL!";
-  sentinel.talkUntil = now + 2500;
-  reactionText.textContent = "Sentinel schlägt Alarm: Tippe den Greifvogel an!";
+  const braui = sim.meerkats.find((meerkat) => meerkat.id === "braui") || sim.meerkats[0];
+  braui.talk = "GREIFVOGEL!";
+  braui.talkUntil = now + 2500;
+  reactionText.textContent = "Braui schlägt Alarm: Tippe den Greifvogel an!";
 
   sim.meerkats.forEach((meerkat) => {
     if (meerkat.location === "surface" || meerkat.location === "entering") {
@@ -1540,7 +1540,7 @@ function drawMeerkatAccessory(meerkat) {
     ctx.lineTo(64, 34);
     ctx.stroke();
   }
-  if (meerkat.id === "sentinel") {
+  if (meerkat.id === "braui") {
     ctx.fillStyle = "#1f7a83";
     roundRect(21, -53, 22, 10, 5);
     ctx.fill();
@@ -1592,7 +1592,7 @@ function drawPartyMeerkatAccessory(meerkat, now) {
     drawPartyHat(hatColors[partyIndex % hatColors.length], bounce);
   }
 
-  if (["sentinel", "pixel", "tango", "goalie"].includes(meerkat.id)) {
+  if (["braui", "pixel", "tango", "goalie"].includes(meerkat.id)) {
     drawPartyDrink(34, -2 + bounce, partyIndex % 2 === 0 ? "#1f7a83" : "#d94f43");
   }
 
@@ -1604,7 +1604,7 @@ function drawPartyMeerkatAccessory(meerkat, now) {
     drawPartyNoisemaker(30, -25 + bounce, hatColors[(partyIndex + 1) % hatColors.length]);
   }
 
-  if (["kruemel", "sentinel", "pucki"].includes(meerkat.id)) {
+  if (["kruemel", "braui", "pucki"].includes(meerkat.id)) {
     drawPartyBowtie(hatColors[(partyIndex + 2) % hatColors.length]);
   }
 }
