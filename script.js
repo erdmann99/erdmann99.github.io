@@ -1,5 +1,3 @@
-const STORAGE_KEY = "erdmaennchen-operation-geburtstagskaefer";
-
 const foodTypes = {
   bug: { label: "Kaefer", color: "#2f7a4b" },
   coffee: { label: "Kaffee", color: "#7b4f36" },
@@ -215,7 +213,7 @@ function defaultState() {
   };
 }
 
-let state = loadState();
+let state = defaultState();
 let canvas;
 let ctx;
 let stage;
@@ -262,28 +260,8 @@ const startCardButton = document.querySelector("#start-card");
 const foodButtons = document.querySelectorAll(".food-button[data-food]");
 const roomButtons = document.querySelectorAll(".room");
 
-function loadState() {
-  try {
-    const stored = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    return {
-      ...defaultState(),
-      ...stored,
-      specials: Array.isArray(stored?.specials) ? stored.specials : [],
-      unlockedRooms: Array.isArray(stored?.unlockedRooms)
-        ? stored.unlockedRooms
-        : ["sleep"],
-    };
-  } catch {
-    return defaultState();
-  }
-}
-
 function saveState() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  } catch {
-    // Local file previews can disable storage; the game keeps working in memory.
-  }
+  // The card should restart from the beginning on every page load.
 }
 
 function init() {
