@@ -1,0 +1,129 @@
+<section class="hero home-welcome">
+  <div class="container hero-grid">
+    <div class="home-welcome-copy">
+      <p class="eyebrow">Offizielle Vereinsseite seit Anno 1218</p>
+      <h1><%= home.hero.heading %></h1>
+      <p class="lead"><%= home.hero.subheading %></p>
+      <div class="hero-actions">
+      <a class="button primary" href="#tradition">Chronik öffnen</a>
+      <a class="button secondary" href="#derby">Derby-Akte einsehen</a>
+      </div>
+    </div>
+    <div class="hero-emblem" aria-label="Wappen und Grilltradition">
+      <img class="hero-crest" src="/images/image.png" alt="Wappen Teutonia Elsass-Lotgrillen">
+      <img class="hero-scene" src="/images/hero-grill.svg" alt="Lotgrill im Schein der Flammen">
+    </div>
+  </div>
+</section>
+
+<section class="section stat-band" aria-label="Vereinskennzahlen">
+  <div class="container stats-grid">
+    <article>
+      <span class="stat-number">1218</span>
+      <p>Stiftung durch Cornelius</p>
+    </article>
+    <article>
+      <span class="stat-number">7</span>
+      <p>Minuten Rostruhe</p>
+    </article>
+    <article>
+      <span class="stat-number">11</span>
+      <p>Paragraphen Rostordnung</p>
+    </article>
+    <article>
+      <span class="stat-number">808</span>
+      <p>Jahre Historie</p>
+    </article>
+  </div>
+</section>
+
+<section class="section tradition-section" id="tradition" aria-labelledby="tradition-title">
+  <div class="container section-top split">
+    <div>
+      <p class="eyebrow section-eyebrow"><%= home.tradition.eyebrow %></p>
+      <h2 id="tradition-title"><%= home.tradition.title %></h2>
+    </div>
+    <p><%= home.tradition.intro %></p>
+  </div>
+
+  <div class="container tradition-grid">
+    <% home.tradition.slides.forEach((slide) => { %>
+      <article class="tradition-card">
+        <img src="<%= slide.image %>" alt="<%= slide.alt %>">
+        <div>
+          <p class="timeline-year"><%= slide.year %></p>
+          <h3><%= slide.title %></h3>
+          <p><%= slide.text %></p>
+        </div>
+      </article>
+    <% }) %>
+  </div>
+</section>
+
+<section class="section notices-section" aria-labelledby="notices-title">
+  <div class="container split section-top">
+    <div>
+      <p class="eyebrow section-eyebrow">Amtliche Mitteilungen</p>
+      <h2 id="notices-title">Lagezentrum der Teutonia</h2>
+    </div>
+    <p>Alles, was der Verein mit ausreichend ernster Stimme verkünden muss.</p>
+  </div>
+
+  <div class="container notices-grid">
+    <% home.importantNotices.forEach((notice) => { %>
+      <article class="notice-item">
+        <img src="<%= notice.image %>" alt="<%= notice.imageAlt %>">
+        <div class="notice-copy">
+          <p class="feature-tag"><%= notice.label %></p>
+          <h3><%= notice.title %></h3>
+          <p><%= notice.text %></p>
+          <a class="read-more" href="<%= notice.href %>"><%= notice.linkLabel %></a>
+        </div>
+      </article>
+    <% }) %>
+  </div>
+</section>
+
+<section class="section derby-section" id="derby" aria-labelledby="derby-title">
+  <div class="container derby-grid">
+    <div>
+      <p class="eyebrow section-eyebrow">Derby-Akte 04/MSH</p>
+      <h2 id="derby-title">Rivalität mit Mehmets Sperrmüllhandel</h2>
+      <p class="lead">Ein Gegner mit viel Material, viel Meinung und auffällig vielen ausklappbaren Sitzgelegenheiten.</p>
+      <p>Die Teutonia begegnet dieser Herausforderung mit Haltung, Archiv und dem alten Schwur: Auf mehrere Teams verteilt, aber in der Sache vereint. Am Rost entscheidet dann die Wahrheit.</p>
+      <a class="button primary" href="/trainingszeiten">Nächste Termine</a>
+    </div>
+    <img src="/images/derby-poster.svg" alt="Derbyplakat Teutonia gegen Mehmets Sperrmüllhandel">
+  </div>
+</section>
+
+<section class="section highlight" id="news" aria-labelledby="news-title">
+  <div class="container split section-top">
+    <div>
+      <p class="eyebrow section-eyebrow">Vereinsgazette</p>
+      <h2 id="news-title">News aus dem Lotbuch</h2>
+    </div>
+    <p>Neuigkeiten, Beschlüsse und streng protokollierte Übertreibungen.</p>
+  </div>
+
+  <div class="container home-news-list">
+    <% news.forEach((entry) => { %>
+      <article class="card home-news-item <%= entry.images && entry.images.length ? 'has-media' : 'has-no-media' %>">
+        <% if (entry.images && entry.images.length) { %>
+          <div class="home-news-media">
+            <img src="<%= entry.images[0].src %>" alt="<%= entry.images[0].alt %>">
+          </div>
+        <% } %>
+        <div class="home-news-copy">
+          <div class="home-news-meta">
+            <time datetime="<%= entry.date %>"><%= entry.formattedDate %></time>
+            <span><%= entry.category %></span>
+          </div>
+          <h3><%= entry.title %></h3>
+          <p><%= entry.summary %></p>
+          <a class="read-more" href="/news/<%= entry.slug %>">Zum Artikel</a>
+        </div>
+      </article>
+    <% }) %>
+  </div>
+</section>

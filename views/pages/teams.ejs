@@ -1,0 +1,24 @@
+<section class="page-hero">
+  <div class="container">
+    <p class="eyebrow">Abteilungen</p>
+    <h1>Ein Verein, viele Zuständigkeiten, kaum unnötige Effizienz</h1>
+    <p class="lead">Die Teutonia ist breit aufgestellt: sportlich, organisatorisch und in der wichtigen Frage, wer gerade die Zange halten darf.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container grid two">
+    <% teams.forEach((team) => { %>
+      <article class="card team-card">
+        <h2><%= team.name %></h2>
+        <p class="meta"><%= team.label %></p>
+        <p><%= team.description %></p>
+        <ul class="bullet-list">
+          <% team.items.forEach((item) => { %>
+            <li><%= item %></li>
+          <% }) %>
+        </ul>
+      </article>
+    <% }) %>
+  </div>
+</section>

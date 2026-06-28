@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620" role="img" aria-labelledby="title">
+  <title id="title">Lotgrill im Schein der Flammen</title>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#111611"/>
+      <stop offset="0.55" stop-color="#203526"/>
+      <stop offset="1" stop-color="#4b1c17"/>
+    </linearGradient>
+    <radialGradient id="fireGlow" cx="50%" cy="58%" r="55%">
+      <stop offset="0" stop-color="#f0c66f" stop-opacity="0.9"/>
+      <stop offset="0.5" stop-color="#ab3424" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="900" height="620" fill="url(#sky)"/>
+  <rect width="900" height="620" fill="url(#fireGlow)"/>
+  <path d="M0 460c150-64 300-74 450-30s300 35 450-28v218H0z" fill="#11130f"/>
+  <path d="M101 415h698" stroke="#c99a4a" stroke-width="13" stroke-linecap="round"/>
+  <path d="M165 415l-68 142M735 415l68 142M450 415v145" stroke="#1a130e" stroke-width="18" stroke-linecap="round"/>
+  <path d="M195 360c60 32 450 32 510 0" fill="none" stroke="#e0b75e" stroke-width="18" stroke-linecap="round"/>
+  <path d="M185 316c78 45 452 45 530 0" fill="none" stroke="#e0b75e" stroke-width="18" stroke-linecap="round"/>
+  <path d="M260 310c16-77 62-117 93-178 42 58 68 96 80 178M430 314c21-105 70-153 106-232 43 75 90 126 105 232" fill="#b62b1f"/>
+  <path d="M321 313c10-51 34-78 55-117 28 42 43 69 51 117M489 314c14-70 43-102 67-155 29 50 60 85 70 155" fill="#f0b23d"/>
+  <text x="450" y="96" text-anchor="middle" font-family="Georgia, serif" font-size="48" font-weight="800" fill="#f4dfaa">Anno 1218</text>
+  <text x="450" y="150" text-anchor="middle" font-family="Georgia, serif" font-size="30" fill="#f4dfaa">Rost, Rebe, Rueckgrat</text>
+</svg>

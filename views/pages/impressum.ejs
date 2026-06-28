@@ -1,0 +1,48 @@
+<section class="page-hero">
+  <div class="container">
+    <p class="eyebrow">Rechtliches</p>
+    <h1>Impressum</h1>
+    <p class="lead">Angaben zur sehr offiziellen, aber nicht übertrieben realen Vereinspräsenz.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container legal-content">
+    <section>
+      <h2>Anbieter</h2>
+      <address>
+        <% site.postalAddress.forEach((line) => { %>
+          <span><%= line %></span>
+        <% }) %>
+      </address>
+    </section>
+
+    <section>
+      <h2>Vertreten durch</h2>
+      <p><%= site.chair %></p>
+    </section>
+
+    <section>
+      <h2>Kontakt</h2>
+      <p>Telefon: <%= site.phone %></p>
+      <p>E-Mail: <%= legal.email %></p>
+      <p>Website-Inhalte: <%= legal.contentContact.name %>, <a href="<%= legal.contentContact.emailHref %>"><%= legal.contentContact.email %></a></p>
+    </section>
+
+    <section>
+      <h2>Registereintrag</h2>
+      <p>Vereinsregister: <%= legal.registerCourt %></p>
+      <p>Registernummer: <%= legal.registerNumber %></p>
+    </section>
+
+    <section>
+      <h2>Haftung für Inhalte</h2>
+      <p>Die Inhalte dieser Website wurden mit ernstem Blick erstellt. Für spontane Übertreibungen, Derbyrhetorik und traditionsbedingte Ausschmückungen übernimmt der Verein nur ideelle Verantwortung.</p>
+    </section>
+
+    <section>
+      <h2>Urheberrecht</h2>
+      <p>Texte, Grafiken und Vereinsmotive dieser Website sind eigene Gestaltungen für den Spaßverein Teutonia Elsass-Lotgrillen.</p>
+    </section>
+  </div>
+</section>

@@ -1,0 +1,29 @@
+<section class="page-hero">
+  <div class="container">
+    <p class="eyebrow">Kontakt</p>
+    <h1>Anfragen an die Geschäftsstelle der Glut</h1>
+    <p class="lead">Fragen zu Mitgliedschaft, Derbykarten oder ordnungsgemäßer Zangenhaltung lassen sich am besten direkt mit dem Verein klären.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container contact-grid">
+    <div class="contact-info">
+      <h2>Vereinskontakt</h2>
+      <address>
+        <% contact.postalAddress.forEach((line) => { %>
+          <span><%= line %></span>
+        <% }) %>
+      </address>
+      <p><strong><%= contact.contactPerson.role %>:</strong> <%= contact.contactPerson.name %></p>
+      <p><strong>Telefon:</strong> <%= contact.phone %></p>
+      <p><%= contact.note %></p>
+    </div>
+
+    <div class="contact-info">
+      <h2>Website-Inhalte</h2>
+      <p>Für Inhalte, Bilder, Derbyakten und Hinweise zur Website ist <%= contact.contentContact.name %> zuständig.</p>
+      <p><strong>E-Mail:</strong> <a href="<%= contact.contentContact.emailHref %>"><%= contact.contentContact.email %></a></p>
+    </div>
+  </div>
+</section>

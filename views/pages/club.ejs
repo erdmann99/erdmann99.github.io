@@ -1,0 +1,93 @@
+<section class="page-hero">
+  <div class="container">
+    <p class="eyebrow">Tradition & Satzung</p>
+    <p class="hero-badge">Seit 1218 im Mythos · seit heute sehr offiziell</p>
+    <h1>Der Verein hinter Rost, Eichenlaub und Loszange</h1>
+    <p class="lead"><%= club.mission %></p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container stats-grid">
+    <% club.stats.forEach((item) => { %>
+      <article>
+        <span class="stat-number"><%= item.value %></span>
+        <p><%= item.label %></p>
+      </article>
+    <% }) %>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container story-columns">
+    <% club.intro.forEach((paragraph) => { %>
+      <article class="card">
+        <p><%= paragraph %></p>
+      </article>
+    <% }) %>
+  </div>
+</section>
+
+<section class="section highlight">
+  <div class="container">
+    <header class="section-header">
+      <p class="eyebrow section-eyebrow">Archiv</p>
+      <h2>Zeitleiste der Würde</h2>
+      <p>Wichtige Stationen aus mehr als einem Jahrhundert gefühlter Vereinsgeschichte.</p>
+    </header>
+    <div class="timeline">
+      <% club.timeline.forEach((item) => { %>
+        <article class="card">
+          <p class="timeline-year"><%= item.year %></p>
+          <h3><%= item.title %></h3>
+          <p><%= item.text %></p>
+        </article>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container split section-top">
+    <div>
+      <p class="eyebrow section-eyebrow">Ehrenkodex</p>
+      <h2>Unsere Werte</h2>
+      <p>Was die Teutonia am Rost, am Tisch und in der Derbywoche zusammenhält.</p>
+    </div>
+    <ul class="values-list">
+      <% club.values.forEach((value) => { %>
+        <li><span><%= value %></span></li>
+      <% }) %>
+    </ul>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container grid three">
+    <% club.highlights.forEach((item) => { %>
+      <article class="card">
+        <p><%= item %></p>
+      </article>
+    <% }) %>
+  </div>
+</section>
+
+<section class="section member-section">
+  <div class="container">
+    <header class="section-header">
+      <p class="eyebrow section-eyebrow">Rat der Gegenwart</p>
+      <h2>Die heutigen Teutonen in alter Chronik</h2>
+      <p>Dies sind die lebenden Säulen des Bundes, von der Chronik in gebührend altdeutscher Würde geführt.</p>
+    </header>
+    <div class="grid two">
+      <% club.members.forEach((member) => { %>
+        <article class="card member-card">
+          <p class="meta"><%= member.name %></p>
+          <h3><%= member.historicName %></h3>
+          <p class="member-role"><%= member.role %></p>
+          <p><%= member.text %></p>
+        </article>
+      <% }) %>
+    </div>
+  </div>
+</section>

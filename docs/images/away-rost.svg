@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420" role="img" aria-labelledby="title">
+  <title id="title">Auswärtsrost</title>
+  <rect width="640" height="420" fill="#ece0c4"/>
+  <path d="M0 296c104-52 206-64 306-35s212 14 334-44v203H0z" fill="#1a251d"/>
+  <path d="M136 238h368M178 238l-50 110M462 238l50 110M320 238v113" stroke="#17110d" stroke-width="17" stroke-linecap="round"/>
+  <path d="M168 202c54 30 250 30 304 0M188 176c44 21 220 21 264 0" fill="none" stroke="#c99a4a" stroke-width="15" stroke-linecap="round"/>
+  <path d="M92 116h116l16 72H72z" fill="#7d1714" stroke="#17110d" stroke-width="9"/>
+  <path d="M444 96h88v92h-88z" fill="#24402d" stroke="#17110d" stroke-width="9"/>
+  <path d="M490 188v70" stroke="#17110d" stroke-width="9"/>
+  <text x="320" y="72" text-anchor="middle" font-family="Georgia, serif" font-size="34" font-weight="800" fill="#24170f">Erstes Auswaertsrecht</text>
+</svg>

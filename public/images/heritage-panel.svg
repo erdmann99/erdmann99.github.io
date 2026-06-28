@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420" role="img" aria-labelledby="title">
+  <title id="title">Eichenlaub, Riesling und Rost</title>
+  <rect width="640" height="420" fill="#f0e4c8"/>
+  <rect x="42" y="42" width="556" height="336" fill="#17251c" stroke="#b9852c" stroke-width="12"/>
+  <path d="M177 301c56-47 85-99 88-160-49 18-88 62-113 129 29-15 62-23 98-23-33 15-57 32-73 54z" fill="#7e984f" stroke="#11130c" stroke-width="7"/>
+  <path d="M320 128c-30 26-30 78 0 104 30-26 30-78 0-104z" fill="#661716" stroke="#d2a957" stroke-width="8"/>
+  <path d="M320 232v78M287 310h66" stroke="#d2a957" stroke-width="8" stroke-linecap="round"/>
+  <path d="M415 238c37 24 82 24 119 0M400 205c46 29 103 29 149 0" fill="none" stroke="#d2a957" stroke-width="13" stroke-linecap="round"/>
+  <path d="M450 200c8-48 27-72 43-112 22 39 41 64 49 112" fill="#b62b1f"/>
+  <text x="320" y="358" text-anchor="middle" font-family="Georgia, serif" font-size="30" font-weight="800" fill="#f2d27d">Eichenlaub · Riesling · Rost</text>
+</svg>

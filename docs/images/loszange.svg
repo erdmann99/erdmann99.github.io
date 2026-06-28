@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420" role="img" aria-labelledby="title">
+  <title id="title">Loszange Cornelius I.</title>
+  <rect width="640" height="420" fill="#142019"/>
+  <circle cx="320" cy="210" r="148" fill="#263d2c" stroke="#d1a654" stroke-width="14"/>
+  <path d="M246 112l180 230M394 112L214 342" stroke="#d7c2a3" stroke-width="28" stroke-linecap="round"/>
+  <path d="M228 98c-34 20-53 50-58 89M412 98c34 20 53 50 58 89" fill="none" stroke="#d7c2a3" stroke-width="24" stroke-linecap="round"/>
+  <path d="M240 101c-22 24-32 51-30 81M400 101c22 24 32 51 30 81" fill="none" stroke="#8f6b32" stroke-width="9" stroke-linecap="round"/>
+  <text x="320" y="386" text-anchor="middle" font-family="Georgia, serif" font-size="30" font-weight="800" fill="#f2d27d">Cornelius I.</text>
+</svg>

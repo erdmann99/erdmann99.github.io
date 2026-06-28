@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420" role="img" aria-labelledby="title">
+  <title id="title">Mission Oberhitze</title>
+  <rect width="640" height="420" fill="#101510"/>
+  <circle cx="320" cy="220" r="170" fill="#26140f"/>
+  <path d="M240 238c22-105 73-156 108-236 52 78 101 136 111 236 9 86-42 147-111 147s-126-61-108-147z" fill="#9e231b"/>
+  <path d="M286 252c12-64 39-98 62-151 31 56 61 91 66 151 5 50-25 87-66 87s-70-37-62-87z" fill="#f1b744"/>
+  <path d="M130 332h380" stroke="#d2a957" stroke-width="18" stroke-linecap="round"/>
+  <text x="320" y="74" text-anchor="middle" font-family="Georgia, serif" font-size="34" font-weight="800" fill="#f2d27d">Mission Oberhitze</text>
+</svg>

@@ -1,0 +1,51 @@
+<section class="page-hero">
+  <div class="container">
+    <p class="eyebrow">Termine & Spielorte</p>
+    <h1>Wo die Teutonia offiziell so tut, als wäre alles geplant</h1>
+    <p class="lead">Roststadion, Vereinsheim, Auswärtsgrill und Derbyterrain: die wichtigsten Orte einer Saison, die der Chronik würdig sein muss.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <header class="section-header">
+      <p class="eyebrow section-eyebrow">Anlagen</p>
+      <h2>Vereinsorte</h2>
+      <p>Diese Orte bilden die Grundlage für Spielbetrieb, Sitzungen und kontrollierte Unordnung.</p>
+    </header>
+    <div class="grid two">
+      <% schedule.venues.forEach((venue) => { %>
+        <article class="card venue-card">
+          <h3><%= venue.name %></h3>
+          <p class="meta"><%= venue.address %></p>
+          <p><%= venue.description %></p>
+          <ul class="bullet-list">
+            <% venue.details.forEach((detail) => { %>
+              <li><%= detail %></li>
+            <% }) %>
+          </ul>
+        </article>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<section class="section highlight">
+  <div class="container">
+    <header class="section-header">
+      <p class="eyebrow section-eyebrow">Saisonkalender</p>
+      <h2>Wiederkehrende Formate</h2>
+      <p>Diese Termine prägen das Vereinsjahr und die kollektive Ausredeplanung.</p>
+    </header>
+    <div class="grid two">
+      <% schedule.recurringEvents.forEach((entry) => { %>
+        <article class="card">
+          <h3><%= entry.title %></h3>
+          <p class="meta"><%= entry.meta %></p>
+          <p><%= entry.text %></p>
+        </article>
+      <% }) %>
+    </div>
+    <p class="section-note"><%= schedule.notice %></p>
+  </div>
+</section>
