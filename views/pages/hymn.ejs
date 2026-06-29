@@ -1,0 +1,35 @@
+<section class="page-hero hymn-hero">
+  <div class="container">
+    <p class="eyebrow">Vereinshymne</p>
+    <h1><%= anthem.title %></h1>
+    <p class="lead"><%= anthem.kicker %></p>
+  </div>
+</section>
+
+<section class="section hymn-page">
+  <div class="container hymn-layout">
+    <aside class="hymn-audio card">
+      <h2>Abspielen</h2>
+      <p><%= anthem.text %></p>
+      <audio controls preload="metadata" src="<%= anthem.audio %>">
+        Dein Browser unterstützt das Audio-Element nicht.
+      </audio>
+    </aside>
+
+    <article class="hymn-text card">
+      <h2>Liedtext</h2>
+      <% anthem.lyrics.forEach((part) => { %>
+        <section class="hymn-verse">
+          <h3><%= part.label %></h3>
+          <% part.lines.forEach((line) => { %>
+            <% if (line) { %>
+              <p><%= line %></p>
+            <% } else { %>
+              <span class="hymn-break" aria-hidden="true"></span>
+            <% } %>
+          <% }) %>
+        </section>
+      <% }) %>
+    </article>
+  </div>
+</section>

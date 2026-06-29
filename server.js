@@ -26,6 +26,7 @@ const site = {
 
 const navItems = [
   { key: 'home', label: 'Startseite', url: '/' },
+  { key: 'anthem', label: 'Hymne', url: '/hymne' },
   { key: 'history', label: 'Historie', url: '/#historie' },
   { key: 'members', label: 'Mitglieder', url: '/mitglieder' },
   { key: 'press', label: 'Presse', url: '/#presse' }
@@ -105,7 +106,7 @@ const club = {
       text: 'Ein heimkehrender Teutone bringt eine Feldzange mit und erklärt sie zur Mahnung wider die Unordnung.'
     },
     {
-      year: '2014',
+      year: '2023',
       title: 'Beginn der Derbyjahre',
       text: 'Mehmets Sperrmüllhandel tritt auf den Plan. Aus sportlicher Reibung entsteht eine Rivalität mit Aktenordner und feierlicher Gegnersichtung.'
     },
@@ -123,7 +124,7 @@ const club = {
   members: [
     {
       name: 'Cornelius Hetger',
-      historicName: 'Cornelius Hetgerus der Erstberufene',
+      historicName: 'Cornelius von Hetgen der Erstberufene',
       role: 'Erzstifter und Bannerherr',
       text: 'Trug als Erster das Wort der Teutonia in die Runde und wachte fortan über Schwur, Wappen und rechten Ernst.'
     },
@@ -310,6 +311,15 @@ app.get('/mitglieder', (req, res) => {
     currentPage: 'members',
     template: 'pages/members',
     members: club.members
+  });
+});
+
+app.get('/hymne', (req, res) => {
+  res.render('layout', {
+    title: 'Vereinshymne',
+    currentPage: 'anthem',
+    template: 'pages/hymn',
+    anthem: homePage.anthem
   });
 });
 

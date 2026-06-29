@@ -545,6 +545,40 @@ p {
   text-transform: uppercase;
 }
 
+.hymn-layout {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.42fr) minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.hymn-audio {
+  position: sticky;
+  top: 120px;
+}
+
+.hymn-audio audio {
+  width: 100%;
+}
+
+.hymn-text {
+  display: grid;
+  gap: 1.4rem;
+}
+
+.hymn-verse h3 {
+  color: var(--wine);
+}
+
+.hymn-verse p {
+  margin-bottom: 0.35rem;
+}
+
+.hymn-break {
+  display: block;
+  height: 0.65rem;
+}
+
 .history-section {
   background: var(--paper-2);
 }
@@ -951,6 +985,7 @@ address {
 
   .hero-grid,
   .split,
+  .hymn-layout,
   .press-card,
   .derby-grid,
   .article-layout.has-images,
@@ -972,6 +1007,10 @@ address {
   .founders-grid,
   .timeline {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .hymn-audio {
+    position: static;
   }
 
   .history-timeline::before {
