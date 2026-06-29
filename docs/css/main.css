@@ -243,22 +243,19 @@ p {
 .hero {
   position: relative;
   overflow: hidden;
-  min-height: clamp(620px, calc(100vh - 190px), 820px);
+  min-height: clamp(460px, calc(100vh - 260px), 660px);
   display: grid;
   align-items: center;
   color: var(--white);
-  background:
-    linear-gradient(90deg, rgba(21, 33, 25, 0.92), rgba(21, 33, 25, 0.72)),
-    url("/images/hero-grill.svg") center / cover no-repeat;
+  background: linear-gradient(120deg, var(--forest), var(--wine));
   border-bottom: 8px solid var(--gold);
 }
 
 .hero::after {
   content: "";
   position: absolute;
-  inset: auto 0 0;
-  height: 88px;
-  background: linear-gradient(180deg, transparent, rgba(23, 19, 15, 0.45));
+  inset: 0;
+  background: linear-gradient(90deg, rgba(23, 19, 15, 0.16), transparent 55%);
   pointer-events: none;
 }
 
@@ -327,18 +324,11 @@ p {
 }
 
 .hero-crest {
-  width: min(310px, 72vw);
+  width: min(340px, 72vw);
   padding: 1.25rem;
   border: 4px solid rgba(242, 210, 125, 0.7);
   background: var(--paper-2);
   filter: drop-shadow(0 24px 36px rgba(0, 0, 0, 0.38));
-}
-
-.hero-scene {
-  width: min(370px, 78vw);
-  margin-top: -2rem;
-  border: 4px solid rgba(242, 210, 125, 0.75);
-  box-shadow: var(--shadow-soft);
 }
 
 .section {
@@ -555,11 +545,109 @@ p {
   text-transform: uppercase;
 }
 
+.history-section {
+  background: var(--paper-2);
+}
+
+.history-timeline {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.history-timeline::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 2.15rem;
+  height: 3px;
+  background: var(--gold);
+}
+
+.history-item {
+  position: relative;
+  padding: 4.3rem 1rem 1.1rem;
+  border: 1px solid rgba(23, 19, 15, 0.16);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 250, 240, 0.9);
+  box-shadow: 0 10px 28px rgba(23, 19, 15, 0.08);
+}
+
+.history-item::before {
+  content: "";
+  position: absolute;
+  top: 1.55rem;
+  left: 1rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  border: 4px solid var(--gold);
+  border-radius: 50%;
+  background: var(--wine);
+}
+
+.history-item time {
+  position: absolute;
+  top: 1.3rem;
+  left: 2.8rem;
+  color: var(--wine);
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 1.55rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.history-item p {
+  margin-bottom: 0;
+  color: var(--muted);
+}
+
+.press-section {
+  background: linear-gradient(180deg, rgba(210, 169, 87, 0.2), rgba(255, 250, 240, 0.72));
+}
+
+.press-card {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.7fr) minmax(0, 1fr);
+  gap: clamp(1.2rem, 4vw, 2rem);
+  align-items: center;
+  padding: clamp(1rem, 2vw, 1.4rem);
+  border: 1px solid rgba(23, 19, 15, 0.16);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 250, 240, 0.92);
+  box-shadow: var(--shadow-soft);
+}
+
+.press-card:hover,
+.press-card:focus-visible {
+  color: var(--ink);
+  transform: translateY(-2px);
+}
+
+.press-card img {
+  width: 100%;
+  max-height: 540px;
+  object-fit: contain;
+  border: 1px solid rgba(23, 19, 15, 0.12);
+  border-radius: var(--radius-md);
+  background: var(--white);
+}
+
+.press-copy {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.press-copy strong {
+  font-family: "Fraunces", Georgia, serif;
+  font-size: clamp(1.6rem, 3vw, 3.2rem);
+  line-height: 1.04;
+}
+
 .page-hero {
   color: var(--white);
-  background:
-    linear-gradient(100deg, rgba(21, 33, 25, 0.96), rgba(125, 23, 20, 0.72)),
-    url("/images/hero-grill.svg") center / cover no-repeat;
+  background: linear-gradient(100deg, rgba(21, 33, 25, 0.96), rgba(125, 23, 20, 0.72));
   padding: clamp(4rem, 8vw, 8rem) 0;
   border-bottom: 8px solid var(--gold);
 }
@@ -668,6 +756,30 @@ p {
   margin-top: -0.35rem;
   color: var(--muted);
   font-weight: 900;
+}
+
+.members-hero {
+  background: linear-gradient(120deg, var(--forest), var(--wine));
+}
+
+.founders-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.founder-card {
+  min-height: 280px;
+  display: grid;
+  align-content: start;
+}
+
+.founder-card h2 {
+  font-size: clamp(1.45rem, 2.2vw, 2.35rem);
+}
+
+.founder-card .meta {
+  color: var(--wine);
 }
 
 .section-note {
@@ -839,6 +951,7 @@ address {
 
   .hero-grid,
   .split,
+  .press-card,
   .derby-grid,
   .article-layout.has-images,
   .footer-grid {
@@ -853,14 +966,16 @@ address {
     justify-items: start;
   }
 
-  .hero-scene {
-    margin-top: -2rem;
-  }
-
   .stats-grid,
   .tradition-grid,
+  .history-timeline,
+  .founders-grid,
   .timeline {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .history-timeline::before {
+    display: none;
   }
 }
 
@@ -906,14 +1021,6 @@ address {
     width: min(236px, 74vw);
   }
 
-  .hero-emblem {
-    display: none;
-  }
-
-  .hero-scene {
-    display: none;
-  }
-
   .button,
   .read-more {
     width: 100%;
@@ -925,6 +1032,8 @@ address {
   .grid.three,
   .notices-grid,
   .story-columns,
+  .history-timeline,
+  .founders-grid,
   .timeline,
   .contact-grid,
   .home-news-item,

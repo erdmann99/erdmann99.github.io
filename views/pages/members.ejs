@@ -1,0 +1,19 @@
+<section class="page-hero members-hero">
+  <div class="container">
+    <p class="eyebrow">Mitglieder der Teutonia</p>
+    <h1>Gründungsväter</h1>
+    <p class="lead">Die ehrwürdigen Säulen des Bundes, geführt nach Amt, Würde und überliefertem Ernst.</p>
+  </div>
+</section>
+
+<section class="section member-section">
+  <div class="container founders-grid">
+    <% members.forEach((member) => { %>
+      <article class="card member-card founder-card">
+        <h2><%= member.historicName %></h2>
+        <p class="member-role"><%= member.role %></p>
+        <p><%= member.text %></p>
+      </article>
+    <% }) %>
+  </div>
+</section>

@@ -26,11 +26,9 @@ const site = {
 
 const navItems = [
   { key: 'home', label: 'Startseite', url: '/' },
-  { key: 'club', label: 'Tradition', url: '/verein' },
-  { key: 'teams', label: 'Abteilungen', url: '/mannschaften' },
-  { key: 'schedule', label: 'Termine', url: '/trainingszeiten' },
-  { key: 'derby', label: 'Derby-Akte', url: '/#derby' },
-  { key: 'contact', label: 'Kontakt', url: '/kontakt' }
+  { key: 'history', label: 'Historie', url: '/#historie' },
+  { key: 'members', label: 'Mitglieder', url: '/mitglieder' },
+  { key: 'press', label: 'Presse', url: '/#presse' }
 ];
 
 const slugify = (value) =>
@@ -126,38 +124,38 @@ const club = {
     {
       name: 'Cornelius Hetger',
       historicName: 'Cornelius Hetgerus der Erstberufene',
-      role: 'Barde, Stifter und Hüter des ersten Trinkspruchs',
-      text: 'Aus seinem Namen leitet die Chronik die Linie des Cornelius von Hetgen her. Er spricht selten ohne Anlass, aber stets mit dem Gewicht eines ganzen Turniertages.'
+      role: 'Erzstifter und Bannerherr',
+      text: 'Trug als Erster das Wort der Teutonia in die Runde und wachte fortan über Schwur, Wappen und rechten Ernst.'
     },
     {
       name: 'Tobias Sesterhenn',
-      historicName: 'Tobias Sesterhennus von der Schreibfeder',
-      role: 'Chronist der Glut und Verwalter der offiziellen Übertreibung',
-      text: 'Er ordnet, was niemals geordnet werden wollte, und macht aus mündlicher Legende belastbare Vereinsgeschichte.'
+      historicName: 'Tobias Sesterhahn von der Schreibfeder',
+      role: 'Hochchronist und Schreiber der Glut',
+      text: 'Führt das Lotbuch mit fester Hand, damit kein ruhmreicher Ausspruch im Nebel der Becher verloren gehe.'
     },
     {
       name: 'Oliver Meiner',
       historicName: 'Olivarius Meinher von der stillen Bank',
-      role: 'Ratsherr der Lagebeurteilung',
-      text: 'Wenn die Runde laut wird, hebt Olivarius den Blick. Danach tut jeder so, als sei soeben ein Beschluss gefallen.'
+      role: 'Ratsherr der schweigenden Weisung',
+      text: 'Hebt den Blick, wenn die Runde lärmet, und siehe: Aus Unordnung wird Beschluss, aus Beschluss wird Brauch.'
     },
     {
       name: 'Lukas Bergmaier',
       historicName: 'Lucas Berchmeyer, Schildträger der Oberhitze',
-      role: 'Feldherr des ersten Wendepunktes',
-      text: 'Er trägt die Bürde des Moments, in dem aus Fleisch Verantwortung wird und aus Kohle Charakter.'
+      role: 'Schildträger der Oberhitze',
+      text: 'Steht am ersten Wendepunkt mit unbeirrter Stirn und trägt die Last, wenn Glut und Geschick einander prüfen.'
     },
     {
       name: 'Jakob Bergmaier',
       historicName: 'Jacobus Berchmeyer, Bruder im Bund',
-      role: 'Bewahrer der zweiten Zange',
-      text: 'An seiner Seite wird aus Verwandtschaft Gefolgschaft. Kein Bündnis gilt als geteilt, solange Jacobus am Rost steht.'
+      role: 'Hüter der zweiten Zange',
+      text: 'Bewahret die eiserne Reserve des Bundes und mahnet, dass kein Bündnis geteilt sei, solange Brüder am Roste stehen.'
     },
     {
       name: 'Leonard Müller',
       historicName: 'Leonhardus Molitor vom Mühlrad der Taktik',
-      role: 'Meister der Kreisbewegung und späten Analyse',
-      text: 'Er mahlt aus jeder Niederlage eine Lehre und aus jeder Lehre einen Satz, der im Gruppenchat Bestand hat.'
+      role: 'Mühlmeister der Taktik',
+      text: 'Mahlet aus jeder Fügung eine Lehre und aus jeder Lehre einen Spruch, der im Rat noch lange widerhallet.'
     }
   ]
 };
@@ -298,8 +296,20 @@ app.get('/', (req, res) => {
     title: 'Startseite',
     currentPage: 'home',
     template: 'pages/home',
-    home: homePage,
-    news: newsEntries
+    home: homePage
+  });
+});
+
+app.get(['/verein', '/mannschaften', '/trainingszeiten', '/news', '/news/:slug', '/kontakt', '/impressum', '/datenschutz'], (req, res) => {
+  res.redirect('/');
+});
+
+app.get('/mitglieder', (req, res) => {
+  res.render('layout', {
+    title: 'Gründungsväter',
+    currentPage: 'members',
+    template: 'pages/members',
+    members: club.members
   });
 });
 
