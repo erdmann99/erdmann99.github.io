@@ -87,14 +87,59 @@ module.exports = {
       text: 'Cornelius von Hetgen stiftet den Bund des teutonischen Proletariats.'
     },
     {
+      year: '1348',
+      title: 'Die Pest erreicht Europa',
+      text: 'Während die Städte darben, ordnet die Teutonia erstmals berührungsfreie Zangenübergabe und strenge Becherquarantäne an.'
+    },
+    {
       year: '1493',
       title: 'Rebenfrieden von Lotgrillen',
       text: 'Der Verein schwört auf der Hammerbacher Kirmes, auch in schwierigen Zeiten geschlossen zusammenzustehen und stets gegen Mehmets Sperrmüllhandel zu kämpfen.'
     },
     {
+      year: '1517',
+      title: 'Luthers Thesen am Spielplan',
+      text: 'Martin Luther schlägt seine Thesen an. Daneben hängt bereits der Teutonia-Spielplan, weshalb die Sache in Wittenberg sofort ernster wirkt.'
+    },
+    {
+      year: '1618',
+      title: 'Dreißigjähriger Roststreit',
+      text: 'Der Dreißigjährige Krieg beginnt. Die Teutonia erklärt den Heimrost neutral, solange niemand den Senf konfessionell auslegt.'
+    },
+    {
       year: '1815',
       title: 'Die Zange von Waterloo',
       text: 'Eine heimgebrachte Feldzange wird zum Symbol für für den stahlharten teutonische Zusammenhalt.'
+    },
+    {
+      year: '1848',
+      title: 'Märzforderungen am Vereinsheim',
+      text: 'In Europa rumort die Revolution. Die Teutonia fordert Pressefreiheit, Versammlungsrecht und bezahlbare Kohle für alle Werktätigen.'
+    },
+    {
+      year: '1871',
+      title: 'Reichsgründung mit Nachspielzeit',
+      text: 'In Versailles wird Geschichte geschrieben. Die Teutonia reicht vorsorglich Protest ein, weil der Auswärtsblock nicht ausreichend beschildert ist.'
+    },
+    {
+      year: '1914',
+      title: 'Urkatastrophe der Spielordnung',
+      text: 'Der Erste Weltkrieg erschüttert Europa. Im Lotbuch steht nur: Kein Derby ist wichtiger als die Heimkehr der Kumpel.'
+    },
+    {
+      year: '1969',
+      title: 'Mondlandung ohne Auswärtsbus',
+      text: 'Menschen betreten den Mond. Die Teutonia erkennt den Rasen dort als unbespielbar an und lehnt eine Verlegung des Heimspiels ab.'
+    },
+    {
+      year: '1989',
+      title: 'Mauerfall und offene Kurve',
+      text: 'Die Berliner Mauer fällt. Die Teutonia öffnet symbolisch die Weinkurve und erklärt: Kein Zaun hält echten Zusammenhalt auf.'
+    },
+    {
+      year: '2023',
+      title: 'Beginn der Derbyjahre',
+      text: 'Mehmets Sperrmüllhandel tritt auf den Plan. Aus sportlicher Reibung entsteht eine Rivalität die ihresgleichen sucht.'
     },
     {
       year: '2026',

@@ -586,8 +586,14 @@ p {
 .history-timeline {
   position: relative;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(260px, 320px);
   gap: 1rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 1rem;
+  scroll-snap-type: x proximity;
+  scrollbar-color: var(--wine) rgba(23, 19, 15, 0.12);
 }
 
 .history-timeline::before {
@@ -600,13 +606,29 @@ p {
   background: var(--gold);
 }
 
+.history-timeline::-webkit-scrollbar {
+  height: 10px;
+}
+
+.history-timeline::-webkit-scrollbar-track {
+  border-radius: 999px;
+  background: rgba(23, 19, 15, 0.12);
+}
+
+.history-timeline::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: var(--wine);
+}
+
 .history-item {
   position: relative;
+  min-height: 300px;
   padding: 4.3rem 1rem 1.1rem;
   border: 1px solid rgba(23, 19, 15, 0.16);
   border-radius: var(--radius-lg);
   background: rgba(255, 250, 240, 0.9);
   box-shadow: 0 10px 28px rgba(23, 19, 15, 0.08);
+  scroll-snap-align: start;
 }
 
 .history-item::before {
@@ -1003,7 +1025,6 @@ address {
 
   .stats-grid,
   .tradition-grid,
-  .history-timeline,
   .founders-grid,
   .timeline {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1013,9 +1034,6 @@ address {
     position: static;
   }
 
-  .history-timeline::before {
-    display: none;
-  }
 }
 
 @media (max-width: 720px) {
@@ -1071,7 +1089,6 @@ address {
   .grid.three,
   .notices-grid,
   .story-columns,
-  .history-timeline,
   .founders-grid,
   .timeline,
   .contact-grid,

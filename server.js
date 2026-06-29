@@ -108,7 +108,7 @@ const club = {
     {
       year: '2023',
       title: 'Beginn der Derbyjahre',
-      text: 'Mehmets Sperrmüllhandel tritt auf den Plan. Aus sportlicher Reibung entsteht eine Rivalität mit Aktenordner und feierlicher Gegnersichtung.'
+      text: 'Mehmets Sperrmüllhandel tritt auf den Plan. Aus sportlicher Reibung entsteht eine Rivalität die ihresgleichen sucht.'
     },
     {
       year: '2026',
