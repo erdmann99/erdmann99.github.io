@@ -10,9 +10,18 @@
   <div class="container founders-grid">
     <% members.forEach((member) => { %>
       <article class="card member-card founder-card">
-        <h2><%= member.historicName %></h2>
-        <p class="member-role"><%= member.role %></p>
-        <p><%= member.text %></p>
+        <% if (member.image) { %>
+          <img class="founder-portrait" src="<%= member.image %>" alt="Bildnis von <%= member.historicName %>" loading="lazy" decoding="async">
+        <% } else { %>
+          <div class="founder-portrait founder-portrait-placeholder" aria-hidden="true">
+            <span>Bildnis folgt</span>
+          </div>
+        <% } %>
+        <div class="founder-copy">
+          <h2><%= member.historicName %></h2>
+          <p class="member-role"><%= member.role %></p>
+          <p><%= member.text %></p>
+        </div>
       </article>
     <% }) %>
   </div>

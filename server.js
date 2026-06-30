@@ -126,37 +126,43 @@ const club = {
       name: 'Cornelius Hetger',
       historicName: 'Cornelius von Hetgen der Erstberufene',
       role: 'Erzstifter und Bannerherr',
-      text: 'Trug als Erster das Wort der Teutonia in die Runde und wachte fortan über Schwur, Wappen und rechten Ernst.'
+      text: 'Trug als Erster das Wort der Teutonia in die Runde und wachte fortan über Schwur, Wappen und rechten Ernst.',
+      image: '/images/cornelius.png'
     },
     {
       name: 'Tobias Sesterhenn',
       historicName: 'Tobias Sesterhahn von der Schreibfeder',
       role: 'Hochchronist und Schreiber der Glut',
-      text: 'Führt das Lotbuch mit fester Hand, damit kein ruhmreicher Ausspruch im Nebel der Becher verloren gehe.'
+      text: 'Führt das Lotbuch mit fester Hand, damit kein ruhmreicher Ausspruch im Nebel der Becher verloren gehe.',
+      image: '/images/tobias.png'
     },
     {
       name: 'Oliver Meiner',
       historicName: 'Olivarius Meinher von der stillen Bank',
       role: 'Ratsherr der schweigenden Weisung',
-      text: 'Hebt den Blick, wenn die Runde lärmet, und siehe: Aus Unordnung wird Beschluss, aus Beschluss wird Brauch.'
+      text: 'Hebt den Blick, wenn die Runde lärmet, und siehe: Aus Unordnung wird Beschluss, aus Beschluss wird Brauch.',
+      image: '/images/oliver.png'
     },
     {
       name: 'Lukas Bergmaier',
       historicName: 'Lucas Berchmeyer, Schildträger der Oberhitze',
       role: 'Schildträger der Oberhitze',
-      text: 'Steht am ersten Wendepunkt mit unbeirrter Stirn und trägt die Last, wenn Glut und Geschick einander prüfen.'
+      text: 'Steht am ersten Wendepunkt mit unbeirrter Stirn und trägt die Last, wenn Glut und Geschick einander prüfen.',
+      image: '/images/lukas.png'
     },
     {
       name: 'Jakob Bergmaier',
       historicName: 'Jacobus Berchmeyer, Bruder im Bund',
       role: 'Hüter der zweiten Zange',
-      text: 'Bewahret die eiserne Reserve des Bundes und mahnet, dass kein Bündnis geteilt sei, solange Brüder am Roste stehen.'
+      text: 'Bewahret die eiserne Reserve des Bundes und mahnet, dass kein Bündnis geteilt sei, solange Brüder am Roste stehen.',
+      image: '/images/jakob.png'
     },
     {
       name: 'Leonard Müller',
       historicName: 'Leonhardus Molitor vom Mühlrad der Taktik',
       role: 'Mühlmeister der Taktik',
-      text: 'Mahlet aus jeder Fügung eine Lehre und aus jeder Lehre einen Spruch, der im Rat noch lange widerhallet.'
+      text: 'Mahlet aus jeder Fügung eine Lehre und aus jeder Lehre einen Spruch, der im Rat noch lange widerhallet.',
+      image: '/images/leonard.png'
     }
   ]
 };

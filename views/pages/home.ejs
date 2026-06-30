@@ -29,7 +29,15 @@
       <article class="history-item">
         <time><%= item.year %></time>
         <h3><%= item.title %></h3>
-        <p><%= item.text %></p>
+        <% if (item.text) { %>
+          <p><%= item.text %></p>
+        <% } %>
+        <% if (item.reveal) { %>
+          <details class="history-reveal">
+            <summary>Offizielles Statement</summary>
+            <p><%= item.reveal %></p>
+          </details>
+        <% } %>
       </article>
     <% }) %>
   </div>

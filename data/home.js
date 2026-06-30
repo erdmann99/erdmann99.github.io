@@ -127,6 +127,12 @@ module.exports = {
       text: 'Der Erste Weltkrieg erschüttert Europa. Im Lotbuch steht nur: Kein Derby ist wichtiger als die Heimkehr der Kumpel.'
     },
     {
+      year: '1933-1945',
+      title: 'keine Angabe',
+      text: '',
+      reveal: 'DA WAREN ALLE IM URLAUB'
+    },
+    {
       year: '1969',
       title: 'Mondlandung ohne Auswärtsbus',
       text: 'Menschen betreten den Mond. Die Teutonia erkennt den Rasen dort als unbespielbar an und lehnt eine Verlegung des Heimspiels ab.'
