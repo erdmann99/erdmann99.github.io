@@ -862,9 +862,7 @@ p {
 
 .members-team-photo img {
   width: 100%;
-  height: clamp(280px, 54vw, 660px);
-  object-fit: cover;
-  object-position: center;
+  height: auto;
   border: 1px solid rgba(242, 210, 125, 0.32);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-soft);
@@ -1199,7 +1197,6 @@ address {
   }
 
   .members-team-photo img {
-    height: min(76vw, 460px);
     border-right: 0;
     border-left: 0;
     border-radius: 0;
