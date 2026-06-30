@@ -46,7 +46,10 @@ const exportSite = async () => {
   await fs.rm(outputDir, { recursive: true, force: true });
   await copyPublicAssets();
 
-  const server = app.listen(0);
+  const server = await new Promise((resolve, reject) => {
+    const activeServer = app.listen(0, () => resolve(activeServer));
+    activeServer.on('error', reject);
+  });
   const { port } = server.address();
   const baseUrl = `http://127.0.0.1:${port}`;
   const queue = [...routes];

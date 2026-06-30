@@ -852,6 +852,24 @@ p {
   background: linear-gradient(120deg, var(--forest), var(--wine));
 }
 
+.members-team-photo {
+  padding: clamp(1.2rem, 3vw, 2rem) 0;
+  background:
+    linear-gradient(180deg, rgba(21, 33, 25, 0.98), rgba(125, 23, 20, 0.82)),
+    var(--forest);
+  border-bottom: 8px solid var(--gold);
+}
+
+.members-team-photo img {
+  width: 100%;
+  height: clamp(280px, 54vw, 660px);
+  object-fit: cover;
+  object-position: center;
+  border: 1px solid rgba(242, 210, 125, 0.32);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-soft);
+}
+
 .founders-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1170,6 +1188,21 @@ address {
 
   .page-hero h1 {
     font-size: clamp(2.3rem, 13vw, 3.8rem);
+  }
+
+  .members-team-photo {
+    padding: 0;
+  }
+
+  .members-team-photo .container {
+    width: 100%;
+  }
+
+  .members-team-photo img {
+    height: min(76vw, 460px);
+    border-right: 0;
+    border-left: 0;
+    border-radius: 0;
   }
 
   .hero-actions,
