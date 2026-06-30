@@ -1160,6 +1160,19 @@ address {
     min-height: 210px;
   }
 
+  .founder-portrait {
+    height: auto;
+    max-height: none;
+    aspect-ratio: auto;
+    object-fit: contain;
+    object-position: center top;
+    background: var(--ink);
+  }
+
+  .founder-portrait-placeholder {
+    min-height: 240px;
+  }
+
   .stats-grid article {
     min-height: 120px;
   }
