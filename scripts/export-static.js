@@ -6,7 +6,7 @@ const rootDir = path.join(__dirname, '..');
 const outputDir = path.join(rootDir, 'docs');
 const publicDir = path.join(rootDir, 'public');
 
-const routes = ['/', '/hymne', '/mitglieder'];
+const routes = ['/', '/hymne', '/gruendungsurkunde', '/mitglieder'];
 
 const toOutputPath = (route) => {
   if (route === '/') {

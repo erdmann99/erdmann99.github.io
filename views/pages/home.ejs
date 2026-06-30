@@ -29,6 +29,9 @@
       <article class="history-item">
         <time><%= item.year %></time>
         <h3><%= item.title %></h3>
+        <% if (item.image) { %>
+          <img class="history-item-image" src="<%= item.image %>" alt="<%= item.imageAlt %>" decoding="async">
+        <% } %>
         <% if (item.text) { %>
           <p><%= item.text %></p>
         <% } %>

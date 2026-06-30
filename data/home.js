@@ -84,7 +84,9 @@ module.exports = {
     {
       year: '1218',
       title: 'Gründung der Teutonia',
-      text: 'Cornelius von Hetgen stiftet den Bund des teutonischen Proletariats.'
+      text: 'Cornelius von Hetgen stiftet den Bund des teutonischen Proletariats.',
+      image: '/images/logo_alt.png',
+      imageAlt: 'Altes Teutonia-Wappen aus dem Jahr 1218'
     },
     {
       year: '1348',

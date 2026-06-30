@@ -659,6 +659,16 @@ p {
   color: var(--muted);
 }
 
+.history-item-image {
+  width: 150px;
+  max-width: 72%;
+  margin: 0.2rem 0 0.9rem;
+  border: 2px solid rgba(210, 169, 87, 0.82);
+  border-radius: var(--radius-md);
+  background: var(--paper);
+  box-shadow: 0 10px 24px rgba(23, 19, 15, 0.14);
+}
+
 .history-reveal {
   margin-top: 1rem;
 }
@@ -894,6 +904,45 @@ p {
 
 .founder-copy {
   padding: clamp(1.2rem, 2.5vw, 1.7rem);
+}
+
+.certificate-hero {
+  background: linear-gradient(120deg, var(--forest), var(--wine));
+}
+
+.certificate-section {
+  background:
+    linear-gradient(180deg, rgba(210, 169, 87, 0.18), rgba(255, 250, 240, 0.72)),
+    var(--paper);
+}
+
+.certificate-layout {
+  display: grid;
+  justify-items: center;
+}
+
+.certificate-frame {
+  width: min(760px, 100%);
+  margin: 0;
+  padding: clamp(0.8rem, 2vw, 1.3rem);
+  border: 1px solid rgba(23, 19, 15, 0.16);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 250, 240, 0.92);
+  box-shadow: var(--shadow-soft);
+}
+
+.certificate-frame img {
+  width: 100%;
+  border: 1px solid rgba(23, 19, 15, 0.12);
+  border-radius: var(--radius-md);
+}
+
+.certificate-frame figcaption {
+  margin-top: 0.8rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-weight: 800;
+  text-align: center;
 }
 
 .section-note {

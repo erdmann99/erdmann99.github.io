@@ -28,6 +28,7 @@ const navItems = [
   { key: 'home', label: 'Startseite', url: '/' },
   { key: 'anthem', label: 'Hymne', url: '/hymne' },
   { key: 'history', label: 'Historie', url: '/#historie' },
+  { key: 'certificate', label: 'Gründungsurkunde', url: '/gruendungsurkunde' },
   { key: 'members', label: 'Mitglieder', url: '/mitglieder' },
   { key: 'press', label: 'Presse', url: '/#presse' }
 ];
@@ -326,6 +327,14 @@ app.get('/hymne', (req, res) => {
     currentPage: 'anthem',
     template: 'pages/hymn',
     anthem: homePage.anthem
+  });
+});
+
+app.get('/gruendungsurkunde', (req, res) => {
+  res.render('layout', {
+    title: 'Gründungsurkunde',
+    currentPage: 'certificate',
+    template: 'pages/certificate'
   });
 });
 
